@@ -1,4 +1,5 @@
-Page({
+const { trackPage } = require('../../utils/track')
+trackPage({
   onLoad(options) {
     // type: service=用户服务协议 privacy=隐私政策
     const type = options.type === 'privacy' ? 'privacy' : 'service'

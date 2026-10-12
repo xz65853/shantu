@@ -2,7 +2,12 @@
   <view class="logo">闪</view>
   <view class="brand">闪途</view>
   <view class="slogan muted">实体企业线上增长服务商</view>
-  <view class="btn-primary login-btn {{agree ? '' : 'login-disabled'}}" bindtap="doLogin">微信一键登录</view>
+
+  <!-- 手机号快捷登录 -->
+  <button class="btn-primary main-btn {{agree ? '' : 'btn-disabled'}}" open-type="getPhoneNumber" disabled="{{!agree}}" bindgetphonenumber="onGetPhone">
+    手机号快捷登录
+  </button>
+  <view class="step-tip">登录即授权手机号</view>
 
   <!-- 协议同意勾选（合规：收集用户信息前须取得授权同意） -->
   <view class="agree-row" bindtap="toggleAgree">

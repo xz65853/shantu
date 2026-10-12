@@ -1,6 +1,7 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途服务详情'
     const q = function (o) { return (o.slug ? '?slug=' + o.slug : '') }

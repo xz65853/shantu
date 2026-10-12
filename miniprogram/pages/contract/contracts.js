@@ -1,7 +1,8 @@
+const { trackPage } = require('../../utils/track')
 const { request, download, openFile } = require('../../utils/request')
 const { fmtDateTime } = require('../../utils/format')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '我的合同'
     return { title, path: '/pages/contract/contracts' }
@@ -30,9 +31,13 @@ Page({
       url: '/pages/contract/sign?mode=view&orderNo=' + (orderno || '') + '&contractId=' + (id || ''),
     })
   },
-  goSign(e) {
+  async goSign(e) {
     const { orderno, id } = e.currentTarget.dataset
-    if (orderno) wx.navigateTo({ url: '/pages/contract/sign?orderNo=' + orderno + '&contractId=' + (id || '') })
+    if (!orderno) return
+    // 签署前强制实名（未实名先跳实名认证，认证后回签署页）
+    const ok = await getApp().ensureRealname('contract', orderno)
+    if (!ok) return
+    wx.navigateTo({ url: '/pages/contract/sign?orderNo=' + orderno + '&contractId=' + (id || '') })
   },
   /**
    * 列表里直接下载合同 PDF

@@ -1,6 +1,7 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途案例 · 我们的代运营成果'
     return { title, path: '/pages/cases/cases' }

@@ -39,10 +39,22 @@
   <!-- 签署模式：手写签名 -->
   <view class="card" wx:if="{{contract && mode === 'sign' && contract.status === 'PENDING'}}">
     <view class="sign-label">请在下方空白处手写签名</view>
-    <canvas type="2d" id="signCanvas" class="sign-canvas" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" bindtouchcancel="onTouchEnd"></canvas>
-    <view class="sign-actions">
-      <view class="clear-btn" bindtap="clear">清除重写</view>
+    <!-- 已全屏签名：回填显示签名预览（横屏比例） -->
+    <view class="sign-preview-box" wx:if="{{signPreviewUrl}}">
+      <image class="sign-preview-img" src="{{signPreviewUrl}}" mode="aspectFit" />
+      <view class="sign-actions">
+        <view class="clear-btn" bindtap="clearSignPreview">重签</view>
+        <view class="full-btn" bindtap="openFullSign">全屏重签</view>
+      </view>
     </view>
+    <!-- 未签名：手写签名板 -->
+    <block wx:else>
+      <canvas type="2d" id="signCanvas" class="sign-canvas" disable-scroll="{{true}}" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" bindtouchcancel="onTouchEnd"></canvas>
+      <view class="sign-actions">
+        <view class="clear-btn" bindtap="clear">清除重写</view>
+        <view class="full-btn" bindtap="openFullSign">全屏签名</view>
+      </view>
+    </block>
     <view class="pdf-actions">
       <view class="btn-outline {{pdfBusy ? 'disabled' : ''}}" data-mode="view" bindtap="openPdf">
         {{pdfBusy ? '下载中…' : '先看一遍（PDF）'}}
@@ -74,5 +86,20 @@
   <view class="footer-bar" wx:if="{{contract && mode === 'sign' && contract.status === 'PENDING'}}">
     <view class="btn-primary {{signing ? 'disabled' : ''}}" bindtap="submit">{{signing ? '签署中...' : '确认签署'}}</view>
     <view class="tip muted">签署即表示您同意合同条款</view>
+  </view>
+</view>
+
+<!-- 全屏签名层 -->
+<view class="full-sign-mask" wx:if="{{fullSign.visible}}" catchtouchmove="noop">
+  <view class="full-sign-head">
+    <text class="full-sign-title">全屏签名</text>
+    <text class="full-sign-close" bindtap="closeFullSign">×</text>
+  </view>
+  <view class="full-sign-stage">
+    <canvas type="2d" id="fullSignCanvas" class="full-sign-canvas" disable-scroll="{{true}}" bindtouchstart="onFullTouchStart" bindtouchmove="onFullTouchMove" bindtouchend="onFullTouchEnd" bindtouchcancel="onFullTouchEnd"></canvas>
+  </view>
+  <view class="full-sign-foot">
+    <view class="full-sign-btn ghost" bindtap="clearFullSign">清除</view>
+    <view class="full-sign-btn solid" bindtap="confirmFullSign">确认签名</view>
   </view>
 </view>

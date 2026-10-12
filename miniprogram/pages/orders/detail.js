@@ -1,3 +1,4 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 const { yuan, fmtDateTime, maskPhone } = require('../../utils/format')
 
@@ -13,7 +14,7 @@ const STATUS = {
   REFUNDED: { text: '已退款', sub: '订单已退款' },
 }
 
-Page({
+trackPage({
   onShareAppMessage() {
     return { title: '订单详情', path: '/pages/orders/orders' }
   },
@@ -83,7 +84,9 @@ Page({
     wx.navigateTo({ url: '/pages/login/login' })
   },
   /** 签署合同 */
-  goSign() {
+  async goSign() {
+    const ok = await app.ensureRealname('contract', this.data.orderNo)
+    if (!ok) return
     wx.navigateTo({ url: '/pages/contract/sign?mode=sign&orderNo=' + this.data.orderNo })
   },
   /** 查看合同 */
@@ -91,7 +94,9 @@ Page({
     wx.navigateTo({ url: '/pages/contract/sign?mode=view&orderNo=' + this.data.orderNo })
   },
   /** 立即支付 */
-  goPay() {
+  async goPay() {
+    const ok = await app.ensureRealname('pay', this.data.orderNo)
+    if (!ok) return
     wx.navigateTo({ url: '/pages/orders/pay?orderNo=' + this.data.orderNo })
   },
 })

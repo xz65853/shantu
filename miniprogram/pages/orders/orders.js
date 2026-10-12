@@ -1,3 +1,4 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 const { yuan } = require('../../utils/format')
 
@@ -13,7 +14,7 @@ const STATUS = {
   COMPLETED: '已完成',
 }
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '我的订单'
     return { title, path: '/pages/orders/orders' }

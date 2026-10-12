@@ -1,8 +1,9 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 
 const app = getApp()
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途 · 短视频代运营'
     return { title, path: '/pages/mine/mine' }
@@ -54,12 +55,9 @@ Page({
     ])
     this.setData({ stats: { projects, orders, contracts } })
   },
-  async doLogin() {
-    wx.showLoading({ title: '登录中' })
-    const ok = await app.silentLogin()
-    wx.hideLoading()
-    if (ok) this.load()
-    else wx.showToast({ title: '登录失败，请重试', icon: 'none' })
+  doLogin() {
+    // 登录需授权手机号 + 头像，统一走登录页
+    wx.navigateTo({ url: '/pages/login/login' })
   },
   /** 选择头像（open-type=chooseAvatar）回调：上传到自己服务器并回写会员资料 */
   async onChooseAvatar(e) {

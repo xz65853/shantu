@@ -16,9 +16,6 @@
       <view class="p-meta">
         <text>{{item.packageName || '服务项目'}}</text>
       </view>
-      <view class="p-meta" wx:if="{{item.startAt}}">
-        <text class="muted">{{item.startAt}} ~ {{item.endAt || ''}}</text>
-      </view>
     </view>
   </view>
 

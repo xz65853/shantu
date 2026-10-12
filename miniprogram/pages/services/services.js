@@ -1,7 +1,8 @@
+const { trackPage } = require('../../utils/track')
 const { request, absUrl } = require('../../utils/request')
 const { yuan } = require('../../utils/format')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途服务 · 短视频代运营套餐'
     return { title, path: '/pages/services/services' }

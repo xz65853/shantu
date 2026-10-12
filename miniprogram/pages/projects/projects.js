@@ -1,8 +1,9 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 
 const STATUS = { PENDING: '待开始', RUNNING: '进行中', PAUSED: '已暂停', DONE: '已完成' }
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '我的项目 · 闪途代运营'
     return { title, path: '/pages/projects/projects' }

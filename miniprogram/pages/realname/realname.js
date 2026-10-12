@@ -1,6 +1,7 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '实名认证'
     return { title, path: '/pages/realname/realname' }
@@ -22,11 +23,15 @@ Page({
   onShow() {
     this.load()
   },
-  /** 认证成功后回跳：下单流程回合同签署页，否则回上一页 */
+  /** 认证成功后回跳：下单流程回合同签署页/支付页，否则回上一页 */
   finish() {
     if (this.next === 'contract' && this.orderNo) {
       wx.redirectTo({
         url: '/pages/contract/sign?mode=sign&orderNo=' + this.orderNo,
+      })
+    } else if (this.next === 'pay' && this.orderNo) {
+      wx.redirectTo({
+        url: '/pages/orders/pay?orderNo=' + this.orderNo,
       })
     } else {
       wx.navigateBack({ fail: () => wx.switchTab({ url: '/pages/mine/mine' }) })

@@ -1,8 +1,9 @@
 const { request } = require('../../utils/request')
+const { trackPage, markLead } = require('../../utils/track')
 
 const PHONE_RE = /^1[3-9]\d{9}$/
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '免费预约 · 闪途短视频代运营'
     return { title, path: '/pages/lead/lead' }
@@ -136,6 +137,8 @@ Page({
         },
       })
       wx.setStorageSync('leadSubmitted', '1')
+      // 留资转化：立即上报，避免用户提交后直接退出导致本次会话漏记 is_lead
+      markLead()
       this.setData({ done: true, submitting: false })
       wx.showToast({ title: '预约成功', icon: 'success' })
     } catch (e) {

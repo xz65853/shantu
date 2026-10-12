@@ -53,8 +53,8 @@
     <view class="table">
       <view class="tr tr-head"><view class="td">信息类型</view><view class="td td-2">收集方式</view><view class="td td-3">使用目的与用途</view></view>
       <view class="tr"><view class="td">微信登录凭证（OpenID）</view><view class="td td-2">微信授权登录时自动获取</view><view class="td td-3">用于识别您的账号唯一身份，建立并保护您的会员账户</view></view>
-      <view class="tr"><view class="td">手机号</view><view class="td td-2">您在下单/认证时主动填写</view><view class="td td-3">用于订单沟通联系、服务通知、身份核验</view></view>
-      <view class="tr"><view class="td">微信昵称、头像</view><view class="td td-2">您主动选择头像/昵称时获取</view><view class="td td-3">用于在本小程序内展示您的个人资料</view></view>
+      <view class="tr"><view class="td">手机号</view><view class="td td-2">您在登录/下单/认证时授权获取或主动填写</view><view class="td td-3">用于账号登录、订单沟通联系、服务通知、身份核验</view></view>
+      <view class="tr"><view class="td">微信昵称、头像</view><view class="td td-2">您在登录或修改资料时授权选择</view><view class="td td-3">用于在本小程序内展示您的个人资料</view></view>
       <view class="tr"><view class="td">真实姓名、身份证号</view><view class="td td-2">您在实名认证时主动填写</view><view class="td td-3">用于完成实名核验（含微信人脸核身）、确认合同签署主体身份、保障合同法律效力</view></view>
     </view>
 

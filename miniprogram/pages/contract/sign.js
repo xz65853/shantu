@@ -1,9 +1,8 @@
+const { trackPage } = require('../../utils/track')
 const { request, download, openFile } = require('../../utils/request')
 const { fmtDateTime } = require('../../utils/format')
 
-const app = getApp()
-
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途合同签署'
     return { title, path: '/pages/contract/sign' }
@@ -17,6 +16,9 @@ Page({
     paying: false,
     pdfBusy: false,
     pdfReady: false, // PDF 是否已成功下载到本地
+    fullSign: { visible: false }, // 全屏签名弹层
+    signatureDataUrl: '', // 最终签名图（全屏签名确认后优先使用）
+    signPreviewUrl: '', // 签名预览图（全屏签名确认后回填展示在签署页）
   },
   onLoad(options) {
     this.setData({
@@ -24,7 +26,29 @@ Page({
       contractId: options.contractId || '',
       mode: options.mode === 'view' ? 'view' : 'sign',
     })
+    // 签署模式：未实名先跳实名（防从合同列表/分享直链绕过实名进入签署页）
+    if (this.data.mode === 'sign') this.checkRealnameBeforeSign()
     this.loadContract()
+  },
+  async checkRealnameBeforeSign() {
+    try {
+      const s = await request({ url: '/api/miniapp/realname/status' })
+      if (s && s.required && s.enabled && !s.isRealVerified) {
+        wx.showModal({
+          title: '需要实名认证',
+          content: '签署合同前需先完成实名认证，是否现在去认证？',
+          confirmText: '去认证',
+          cancelText: '取消',
+          success: (r) => {
+            if (r.confirm) {
+              wx.redirectTo({ url: '/pages/realname/realname?next=contract&orderNo=' + (this.data.orderNo || '') })
+            }
+          },
+        })
+      }
+    } catch (e) {
+      /* 查询失败不阻塞，后端签署接口仍有硬校验兜底 */
+    }
   },
   onReady() {
     // 画布包裹在 wx:if 里，此时 contract 可能还没回来，真正初始化在 loadContract 之后
@@ -112,16 +136,91 @@ Page({
       return
     }
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+    this.setData({ signatureDataUrl: '', signPreviewUrl: '' })
   },
-  async submit() {
-    if (this.data.signing) return
-    // 兜底：万一画布初始化时机还是没赶上，这里补一次
-    if (!this.canvas) await this.initCanvas()
-    if (!this.canvas) {
-      wx.showToast({ title: '签名组件未就绪，请返回重试', icon: 'none' })
+  // 重签：清掉全屏签名预览，回到手写签名板
+  clearSignPreview() {
+    this.setData({ signatureDataUrl: '', signPreviewUrl: '' })
+    if (this.ctx) this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+  },
+
+  // ===== 全屏签名 =====
+  openFullSign() {
+    this.setData({ 'fullSign.visible': true }, () => {
+      wx.nextTick(() => this.initFullCanvas())
+    })
+  },
+  closeFullSign() {
+    this.setData({ 'fullSign.visible': false })
+  },
+  initFullCanvas() {
+    return new Promise((resolve) => {
+      wx.createSelectorQuery()
+        .select('#fullSignCanvas')
+        .fields({ node: true, size: true })
+        .exec((res) => {
+          if (!res || !res[0] || !res[0].node) return resolve(false)
+          const canvas = res[0].node
+          const ctx = canvas.getContext('2d')
+          const dpr = wx.getSystemInfoSync().pixelRatio
+          canvas.width = res[0].width * dpr
+          canvas.height = res[0].height * dpr
+          ctx.scale(dpr, dpr)
+          ctx.strokeStyle = '#1a1a1a'
+          ctx.lineWidth = 3
+          ctx.lineCap = 'round'
+          ctx.lineJoin = 'round'
+          this.fullCanvas = canvas
+          this.fullCtx = ctx
+          this.fullCanvasWidth = res[0].width
+          this.fullCanvasHeight = res[0].height
+          resolve(true)
+        })
+    })
+  },
+  onFullTouchStart(e) {
+    if (!this.fullCtx) return
+    const t = e.touches[0]
+    this.fullDrawing = true
+    this.fullCtx.beginPath()
+    this.fullCtx.moveTo(t.x, t.y)
+  },
+  onFullTouchMove(e) {
+    if (!this.fullDrawing || !this.fullCtx) return
+    const t = e.touches[0]
+    this.fullCtx.lineTo(t.x, t.y)
+    this.fullCtx.stroke()
+  },
+  onFullTouchEnd() {
+    this.fullDrawing = false
+  },
+  clearFullSign() {
+    if (!this.fullCtx) return
+    this.fullCtx.clearRect(0, 0, this.fullCanvasWidth, this.fullCanvasHeight)
+  },
+  confirmFullSign() {
+    if (!this.fullCanvas) {
+      wx.showToast({ title: '签名板未就绪', icon: 'none' })
       return
     }
-    const dataUrl = this.canvas.toDataURL('image/png')
+    const dataUrl = this.fullCanvas.toDataURL('image/png')
+    // 判断是否真签了字：用像素简单判断（这里直接接受，由后端/展示兜底）
+    this.setData({ signatureDataUrl: dataUrl, signPreviewUrl: dataUrl, 'fullSign.visible': false })
+    wx.showToast({ title: '签名已就绪', icon: 'none' })
+  },
+
+  async submit() {
+    if (this.data.signing) return
+    let dataUrl = this.data.signatureDataUrl
+    if (!dataUrl) {
+      // 兜底：小签名板
+      if (!this.canvas) await this.initCanvas()
+      if (!this.canvas) {
+        wx.showToast({ title: '签名组件未就绪，请返回重试', icon: 'none' })
+        return
+      }
+      dataUrl = this.canvas.toDataURL('image/png')
+    }
     this.setData({ signing: true })
     try {
       await request({
@@ -236,4 +335,6 @@ Page({
         this.data.contractId,
     })
   },
+
+  noop() {},
 })

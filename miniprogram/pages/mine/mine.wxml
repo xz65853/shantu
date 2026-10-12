@@ -10,7 +10,7 @@
           <view class="avatar-placeholder">闪</view>
         </view>
         <view class="guest-tip">登录后查看项目、订单与合同</view>
-        <view class="login-btn" hover-class="login-btn-press" bindtap="doLogin">微信一键登录</view>
+        <view class="login-btn" hover-class="login-btn-press" bindtap="doLogin">手机号快捷登录</view>
       </view>
 
       <!-- 已登录 -->

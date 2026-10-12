@@ -1,7 +1,8 @@
+const { trackPage } = require('../../utils/track')
 const { request } = require('../../utils/request')
 const { yuan } = require('../../utils/format')
 
-Page({
+trackPage({
   onShareAppMessage() {
     const title = '闪途订单支付'
     return { title, path: '/pages/orders/pay' }
