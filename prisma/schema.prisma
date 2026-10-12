@@ -1,0 +1,1623 @@
+// 湖南途鲸文化传媒有限公司 官网 + 获客管理后台
+
+// 数据库：MySQL 8
+
+generator client {
+  provider = "prisma-client-js"
+
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl-openssl-3.0.x", "rhel-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "mysql"
+
+  url = env("DATABASE_URL")
+}
+
+// ---------------- 管理员 ----------------
+
+enum AdminRole {
+  SUPER_ADMIN
+
+  OPERATOR
+
+  SALES
+
+  FINANCE // 财务：看订单/金额，不看客户隐私
+
+  READONLY // 只读
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+
+  username String @unique
+
+  passwordHash String @map("password_hash")
+
+  displayName String @map("display_name")
+
+  role AdminRole @default(OPERATOR)
+
+  isActive Boolean @default(true) @map("is_active")
+
+  // 小程序绑定：绑定微信 openid 后，可在小程序「我的」进入手机端管理后台
+
+  openId String? @unique @map("open_id")
+
+  phone String? @map("phone")
+
+  remark String? @db.Text
+
+  lastLoginAt DateTime? @map("last_login_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  followups  LeadFollowup[]
+  aiCallLogs AiCallLog[]
+
+  @@map("admins")
+}
+
+// 小程序管理后台绑定码：后台生成 6 位数字码（5 分钟有效），小程序端输入绑定 openid
+
+model AdminBindCode {
+  id Int @id @default(autoincrement())
+
+  adminId Int @map("admin_id")
+
+  code String @unique
+
+  expiresAt DateTime @map("expires_at")
+
+  usedAt DateTime? @map("used_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([adminId])
+  @@map("admin_bind_codes")
+}
+
+// ---------------- 服务项目 ----------------
+
+model ServiceCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  slug String @unique
+
+  sort Int @default(0)
+
+  isPublished Boolean @default(true) @map("is_published")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  services Service[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  slug String @unique
+
+  enName String? @map("en_name")
+
+  icon String?
+
+  summary String @db.Text
+
+  detail String? @db.Text
+
+  process String? @db.Text
+
+  target String? @db.Text
+
+  faq String? @db.Text
+
+  cover String?
+
+  seoTitle String? @map("seo_title")
+
+  seoDesc String? @map("seo_description") @db.Text
+
+  sort Int @default(0)
+
+  status String @default("PUBLISHED") // DRAFT / PUBLISHED / OFFLINE
+
+  categoryId Int? @map("category_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([status, sort])
+  @@index([categoryId])
+  @@map("services")
+}
+
+// ---------------- 成功案例 ----------------
+
+model CaseCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  slug String @unique
+
+  sort Int @default(0)
+
+  isPublished Boolean @default(true) @map("is_published")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cases Case[]
+
+  @@map("case_categories")
+}
+
+model Case {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  slug String @unique
+
+  subtitle String?
+
+  industry String?
+
+  projectType String? @map("project_type")
+
+  cover String?
+
+  summary String? @db.Text
+
+  background String? @db.Text
+
+  strategy String? @db.Text
+
+  execution String? @db.Text
+
+  result String? @db.Text
+
+  metrics String? @db.Text // JSON 字符串：数据指标
+
+  showMetrics Boolean @default(false) @map("show_metrics")
+
+  gallery String? @db.Text // JSON 字符串：图片数组
+
+  video String?
+
+  clientName String? @map("client_name")
+
+  period String?
+
+  seoTitle String? @map("seo_title")
+
+  seoDesc String? @map("seo_description") @db.Text
+
+  isFeatured Boolean @default(false) @map("is_featured")
+
+  status String @default("PUBLISHED") // DRAFT / PUBLISHED / OFFLINE
+
+  sort Int @default(0)
+
+  categoryId Int? @map("category_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category CaseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([status, sort])
+  @@index([isFeatured])
+  @@index([categoryId])
+  @@map("cases")
+}
+
+// ---------------- 运营干货 / 文章 ----------------
+
+model ArticleCategory {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  slug String @unique
+
+  sort Int @default(0)
+
+  isPublished Boolean @default(true) @map("is_published")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  articles Article[]
+
+  @@map("article_categories")
+}
+
+model Article {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  slug String @unique
+
+  summary String? @db.Text
+
+  content String @db.Text
+
+  cover String?
+
+  author String?
+
+  seoTitle String? @map("seo_title")
+
+  seoDesc String? @map("seo_description") @db.Text
+
+  status String @default("PUBLISHED") // DRAFT / PUBLISHED / OFFLINE
+
+  views Int @default(0)
+
+  publishedAt DateTime? @map("published_at")
+
+  categoryId Int? @map("category_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category ArticleCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@map("articles")
+}
+
+// ---------------- 客户线索 ----------------
+
+enum LeadStatus {
+  PENDING
+
+  CONTACTED
+
+  INTENTION
+
+  QUOTED
+
+  WON
+
+  HOLD
+
+  INVALID
+}
+
+model Lead {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  phone String
+
+  company String?
+
+  city String?
+
+  industry String?
+
+  requirements String? @db.Text // JSON 数组
+
+  message String? @db.Text
+
+  source String? // 来源渠道
+
+  sourcePage String? @map("source_page") // 来源页面
+
+  // 广告归因：腾讯广告点击 ID 与来源（留资时由小程序带上，用于算转化）
+  clickid String? @db.VarChar(100) // 腾讯广告 CLICKID
+  adSource String? @map("ad_source") @db.VarChar(50) // 广告来源，如 tencent
+
+  status LeadStatus @default(PENDING)
+
+  assignedTo Int? @map("assigned_to")
+
+  note String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  followups LeadFollowup[]
+
+  @@index([phone])
+  @@index([status])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+model LeadFollowup {
+  id Int @id @default(autoincrement())
+
+  leadId Int @map("lead_id")
+
+  adminId Int? @map("admin_id")
+
+  content String @db.Text
+
+  nextFollowupAt DateTime? @map("next_followup_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([leadId])
+  @@map("lead_followups")
+}
+
+// ---------------- Banner ----------------
+
+model Banner {
+  id Int @id @default(autoincrement())
+
+  title String
+
+  subtitle String? @db.Text
+
+  image String?
+
+  buttonText String? @map("button_text")
+
+  buttonLink String? @map("button_link")
+
+  sort Int @default(0)
+
+  startAt DateTime? @map("start_at")
+
+  endAt DateTime? @map("end_at")
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sort])
+  @@map("banners")
+}
+
+// ---------------- 媒体库 ----------------
+
+model Media {
+  id Int @id @default(autoincrement())
+
+  filename String
+
+  path String
+
+  url String
+
+  mimeType String? @map("mime_type")
+
+  size Int @default(0)
+
+  width Int?
+
+  height Int?
+
+  folder String @default("common")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([folder])
+  @@index([createdAt])
+  @@map("media")
+}
+
+// ---------------- 表单管理（前台咨询表单可配置项） ----------------
+
+model FormOption {
+  id Int @id @default(autoincrement())
+
+  group String // industry / requirement / source
+
+  label String
+
+  value String
+
+  sort Int @default(0)
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([group, sort])
+  @@map("form_options")
+}
+
+// ---------------- 网站设置 / SEO ----------------
+
+model SiteSetting {
+  id Int @id @default(autoincrement())
+
+  key String @unique
+
+  value String? @db.Text
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model SeoSetting {
+  id Int @id @default(autoincrement())
+
+  path String @unique // 页面路径，如 /services
+
+  title String?
+
+  desc String? @db.Text
+
+  keywords String? @db.Text
+
+  ogImage String? @map("og_image")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("seo_settings")
+}
+
+// ---------------- 访问统计（看板用） ----------------
+
+model VisitLog {
+  id Int @id @default(autoincrement())
+
+  path String
+
+  referer String? @db.Text
+
+  ua String? @db.Text
+
+  ip String?
+
+  memberId Int? @map("member_id")
+
+  member Member? @relation(fields: [memberId], references: [id])
+
+  // ---- 广告监测：渠道标记与访问记录（2026-10-10 扩展）----
+  // 单次会话唯一 ID，用于上报幂等 upsert，同一会话多次上报只保留最终态
+  visitId String?  @unique @map("visit_id") @db.VarChar(64)
+  // 渠道：ad = 广告来源（携带 clickid），organic = 自然来源
+  channel String?  @db.VarChar(10)
+  // 来源细分：腾讯广告·计划A / 微信搜索 / 好友分享 / 扫码直达 / 历史留存
+  source  String?  @db.VarChar(50)
+  // 腾讯广告点击 ID，channel=ad 时必填
+  clickid String?  @db.VarChar(100)
+  // 小程序场景值（1001 发现页 / 1035 公众号菜单 等）
+  scene   String?  @db.VarChar(20)
+  // 落地页（会话首个页面）
+  entryPage String? @map("entry_page") @db.VarChar(255)
+  // 访问路径序列，JSON 数组字符串，例：["首页","服务页","预约页"]
+  pathSeq String? @map("path_seq") @db.Text
+  // 会话停留时长（秒）
+  duration Int?
+  // 会话内是否提交预约留资
+  isLead Boolean @default(false) @map("is_lead")
+  // 是否新用户（后端按 openid 首次出现判定，前端仅提供参考值）
+  isNew  Boolean @default(false) @map("is_new")
+  // 微信 openid，未登录访客也可进入流水
+  openid String? @db.VarChar(64)
+  // 客户端 JSONP 上报的归属地（ping0.cc），优先于离线库结果
+  geoClient String? @map("geo_client") @db.VarChar(120)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([path])
+  @@index([memberId])
+  @@index([channel])
+  @@index([clickid])
+  @@index([openid])
+  @@map("visit_logs")
+}
+
+// ---------------- 套餐 / 订单 / 在线支付 ----------------
+
+enum OrderStatus {
+  PENDING // 待支付
+
+  PAYING // 支付中
+
+  PAID // 已支付
+
+  CANCELLED // 已取消
+
+  REFUNDING // 退款中
+
+  REFUNDED // 已退款
+
+  COMPLETED // 已完成
+}
+
+enum PayMethod {
+  WECHAT // 微信支付（v3：Native / JSAPI）
+
+  ALIPAY // 支付宝
+
+  EPAY // 易支付（第三方聚合，可选微信/支付宝通道）
+
+  OFFLINE // 线下对接
+}
+
+model Package {
+  id Int @id @default(autoincrement())
+
+  name String // 如：月度代运营
+
+  slug String @unique
+
+  period String // MONTH / QUARTER / YEAR
+
+  periodDays Int @default(31) @map("period_days") // 服务天数 31/93/372
+
+  price Int // 单位：分（3000 元 = 300000）
+
+  originalPrice Int? @map("original_price") // 划线价，单位：分
+
+  summary String? @db.VarChar(255)
+
+  cover String? // 套餐封面图（详情页顶部）
+
+  features String? @db.Text // JSON 数组字符串（兼容旧字段）
+
+  servicesJson String? @map("services_json") @db.Text // 服务项数组（合同数据源）
+
+  recommended Boolean @default(false)
+
+  status Int @default(1) // 1 上架 / 0 下架
+
+  sort Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  templateId    Int?         @map("template_id") // 指定合同模板（下单自动套用）
+  serviceTypeId Int?         @map("service_type_id") // 绑定服务类型（驱动日报字段）
+  serviceType   ServiceType? @relation(fields: [serviceTypeId], references: [id], onDelete: SetNull)
+
+  template ContractTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  orders Order[]
+
+
+  skus PackageSku[]
+
+  @@index([status, sort])
+  @@map("packages")
+}
+
+model PackageSku {
+  id Int @id @default(autoincrement())
+
+  packageId Int @map("package_id")
+
+  name String // SKU 名称：月度 / 季度 / 年度
+
+  price Int // 单位：分
+
+  originalPrice Int? @map("original_price") // 划线价，分
+
+  serviceDays Int @default(31) @map("service_days") // 服务天数
+
+  features String? @db.Text // 服务内容 JSON 数组（每个 SKU 可不同）
+
+  sort Int @default(0)
+
+  status Int @default(1) // 1 上架 / 0 下架
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  orders Order[]
+
+  @@index([packageId, sort])
+  @@map("package_skus")
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+
+  orderNo String @unique @map("order_no")
+
+  packageId Int? @map("package_id")
+
+  skuId Int? @map("sku_id")
+
+  skuName String? @map("sku_name")
+
+  packageName String @map("package_name")
+
+  period String @default("")
+
+  amount Int // 实付金额，单位：分（原价 - discountAmount）
+
+  discountAmount Int @default(0) @map("discount_amount") // 优惠抵扣，分
+
+  couponCode String? @map("coupon_code")
+
+  couponId Int? @map("coupon_id")
+
+  status OrderStatus @default(PENDING)
+
+  payMethod PayMethod? @map("pay_method")
+
+  // 广告归因：腾讯广告点击 ID 与来源（下单时由小程序带上）
+  clickid String? @db.VarChar(100) // 腾讯广告 CLICKID
+  adSource String? @map("ad_source") @db.VarChar(50) // 广告来源，如 tencent
+
+  // 易支付/聚合通道下的具体通道：wxpay / alipay
+
+  payChannel String? @map("pay_channel")
+
+  // 支付服务商（可插拔）：YIPAY / WECHAT / MOCK
+
+  paymentProvider String? @map("payment_provider")
+
+  // 币种（固定 CNY）
+
+  currency String @default("CNY")
+
+  // 下单会员（官网登录 / 小程序微信登录），游客线索为空
+
+  memberId Int? @map("member_id")
+
+  // 客户信息
+
+  name String
+
+  phone String
+
+  company String?
+
+  city String?
+
+  industry String?
+
+  remark String? @db.Text
+
+  source String? // 来源页面
+
+  type String @default("STANDARD") @map("order_type") // STANDARD 固定套餐 / CUSTOM 定制
+
+  customStatus String? @map("custom_status") // 定制单：QUOTING / PENDING_CONFIRM / CONFIRMED
+
+  serviceContent String? @map("service_content") @db.Text // 定制服务内容（顾问编辑）
+
+  // 套餐快照（下单时从套餐表拷过来，套餐后续改价/改服务项不影响历史订单）
+
+  packageServicesJson String? @map("package_services_json") @db.Text // 服务项数组快照
+
+  periodDays Int? @map("period_days") // 服务天数快照
+
+  // 实名认证快照（签署合同时从会员档写入，认证姓名为准）
+
+  realName String? @map("real_name")
+
+  realIdCardEnc String? @map("real_id_card_enc")
+
+  realVerifiedAt DateTime? @map("real_verified_at")
+
+  // 支付结果
+
+  transactionId String? @map("transaction_id")
+
+  paidAt DateTime? @map("paid_at")
+
+  adminRemark String? @map("admin_remark") @db.Text
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  package Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+
+  sku PackageSku? @relation(fields: [skuId], references: [id], onDelete: SetNull)
+
+  member Member? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  coupon Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
+  payments Payment[]
+
+  refunds Refund[]
+
+  contracts Contract[]
+
+  @@index([status])
+  @@index([phone])
+  @@index([memberId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+// ---------------- 支付流水 / 支付日志 / 退款 ----------------
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  orderId Int @map("order_id")
+
+  provider String // YIPAY / WECHAT / MOCK
+
+  transactionId String? @map("transaction_id") // 第三方/平台交易号
+
+  tradeNo String? @map("trade_no") // 平台订单号
+
+  amount Int // 单位：分
+
+  status String @default("PENDING") // PENDING / SUCCESS / FAILED / REFUNDED
+
+  rawResponse String? @map("raw_response") @db.Text // 原始响应/回调 JSON（不含密钥）
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([transactionId])
+  @@map("payments")
+}
+
+model PaymentLog {
+  id Int @id @default(autoincrement())
+
+  orderNo String @map("order_no")
+
+  provider String
+
+  requestId String? @map("request_id")
+
+  status String @default("INFO") // INFO / SUCCESS / ERROR
+
+  error String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([orderNo])
+  @@index([createdAt])
+  @@map("payment_logs")
+}
+
+model Refund {
+  id Int @id @default(autoincrement())
+
+  orderId Int @map("order_id")
+
+  provider String
+
+  refundNo String? @map("refund_no") // 平台退款单号
+
+  outRefundNo String? @map("out_refund_no") // 商户退款单号
+
+  amount Int // 单位：分
+
+  status String @default("PENDING") // PENDING / SUCCESS / FAILED
+
+  rawResponse String? @map("raw_response") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("refunds")
+}
+
+// ---------------- 会员（官网客户 + 小程序客户统一管理） ----------------
+
+model Member {
+  id Int @id @default(autoincrement())
+
+  // 会员ID（登录账号之一，如 TJ100001），注册时自动生成
+
+  userId String? @unique @map("user_id")
+  // 历史编号（改造前 TJ 开头的原编号），迁移时留存备查
+  oldNo  String? @map("old_no")
+
+  type String @default("WEB") // WEB 官网注册 / MINI 小程序微信登录
+
+  phone String? // 手机号（官网必填；小程序通过手机号授权绑定）
+
+  // 登录密码（bcrypt）。小程序微信登录用户可能为空，绑定手机号后可自行设置
+
+  passwordHash String? @map("password_hash")
+
+  name String? // 官网填写的姓名
+
+  nickname String? // 微信昵称（小程序）
+
+  avatar String? // 微信头像（小程序）
+
+  openId String? @unique @map("open_id") // 小程序 openid
+
+  unionId String? @unique @map("union_id")
+
+  status String @default("ACTIVE") // ACTIVE / BLOCKED
+
+  // 跨端合并：被合并账号的 mergedInto 指向主账号 id；source 记录来源 web/miniapp/both
+
+  mergedInto Int? @map("merged_into")
+
+  source String @default("web") @map("source") // web / miniapp / both
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  remark String? @db.Text
+
+  // 实名认证（人脸核身 / 二要素），跨端合并后归属主账号
+
+  isRealVerified Boolean @default(false) @map("is_real_verified")
+
+  realName String? @map("real_name")
+
+  idCardNoEncrypted String? @map("id_card_no_encrypted")
+
+  realVerifiedAt DateTime? @map("real_verified_at")
+
+  lastLoginAt DateTime? @map("last_login_at")
+
+  lastLoginIp String? @map("last_login_ip")
+
+  // 广告归因（首次登录/注册时写入）
+  clickid String? @db.VarChar(100)
+
+  adSource String? @map("ad_source") @db.VarChar(50)
+
+  registeredSource String? @map("registered_source") @db.VarChar(20)
+
+  registeredIp String? @map("registered_ip") @db.VarChar(45)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  visitLogs VisitLog[]
+
+  projects Project[]
+
+  realNameAuths RealNameAuth[]
+  aiCallLogs    AiCallLog[]
+
+  mergedTo Member? @relation("MemberMerge", fields: [mergedInto], references: [id], onDelete: SetNull)
+
+  mergedChildren Member[] @relation("MemberMerge")
+
+  aiChatMessages AiChatMessage[]
+  notifications  Notification[]
+
+  @@index([phone])
+  @@index([mergedInto])
+  @@index([type])
+  @@index([createdAt])
+  @@map("members")
+}
+
+// ---------------- 客户项目 / 运营报告（V2.0） ----------------
+
+enum ProjectStatus {
+  PENDING // 待开始
+
+  RUNNING // 进行中
+
+  PAUSED // 暂停
+
+  DONE // 已完成
+}
+
+// 客户购买服务后，由后台创建的服务项目
+
+model Project {
+  id Int @id @default(autoincrement())
+
+  name String // 项目名称
+
+  // 项目编号：XM + 6 位自增 id（如 XM000123），创建时自动生成，唯一
+  projectNo String? @unique @map("project_no")
+
+  memberId Int @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // 关联订单 / 套餐（可空，后台手动创建时允许不关联）
+
+  orderId Int? @map("order_id")
+
+  packageName String? @map("package_name")
+
+  serviceDesc String? @map("service_desc") @db.Text // 服务内容说明
+
+  manager String? // 项目负责人
+
+  startAt DateTime? @map("start_at")
+
+  endAt DateTime? @map("end_at")
+
+  status ProjectStatus @default(PENDING)
+
+  note String? @db.Text // 内部备注（不对客户展示）
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  reports ProjectReport[]
+
+  dailyLogs      ProjectDailyLog[]
+  aiChatMessages AiChatMessage[]
+  servicePeriods ServicePeriod[]
+
+  serviceType   ServiceType? @relation(fields: [serviceTypeId], references: [id])
+  serviceTypeId Int?
+
+  @@index([memberId])
+  @@index([status])
+  @@map("projects")
+}
+
+// 月度运营报告：后台创建，客户在小程序只读查看
+
+model ProjectReport {
+  id Int @id @default(autoincrement())
+
+  projectId Int @map("project_id")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  month String // 报告月份，如 2026-09
+
+  videos Int @default(0) // 发布视频数
+
+  lives Int @default(0) // 直播场次
+
+  views Int @default(0) // 播放量
+
+  newFans Int @default(0) @map("new_fans") // 新增粉丝
+
+  leads Int @default(0) // 咨询数
+
+  deals Int @default(0) // 成交数
+
+  gmv Int @default(0) // GMV，单位：分
+
+  summary String? @db.Text // 月度总结
+
+  nextPlan String? @map("next_plan") @db.Text // 下月计划
+
+  imagesJson String? @map("images_json") @db.Text // 运营截图 URL 数组（JSON 字符串）
+
+  dataJson String? @map("data_json") @db.Text // 服务类型动态字段汇总（JSON 字符串）
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([projectId, month])
+  @@index([projectId])
+  @@map("project_reports")
+}
+
+// 每日工作记录（日报）：后台按天写，客户在小程序只读查看
+
+model ProjectDailyLog {
+  id         Int      @id @default(autoincrement())
+  projectId  Int      @map("project_id")
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workDate   String   @map("work_date") // 工作日期，YYYY-MM-DD
+  content    String   @db.Text // 当日工作内容
+  videos     Int      @default(0) // 今日发布视频数
+  lives      Int      @default(0) // 今日直播场次
+  views      BigInt   @default(0) // 今日播放量
+  newFans    Int      @default(0) @map("new_fans") // 今日新增粉丝
+  leads      Int      @default(0) // 今日咨询数
+  deals      Int      @default(0) // 今日成交单数
+  gmv        BigInt   @default(0) // 今日 GMV，单位：分
+  summary    String?  @db.Text // 文字总结（今天做了什么）
+  imagesJson String?  @map("images_json") @db.Text // 截图 URL 数组（JSON 字符串，最多 9 张）
+  dataJson   String?  @map("data_json") @db.Text // 服务类型自定义字段数据
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([projectId, workDate])
+  @@index([projectId, workDate])
+  @@map("project_daily_logs")
+}
+
+// 优惠码/优惠券：后台发码，下单抵扣（FIXED 固定减免 / PERCENT 折扣）
+
+model Coupon {
+  id Int @id @default(autoincrement())
+
+  code String @unique
+
+  name String
+
+  discountType String @default("FIXED") @map("discount_type") // FIXED / PERCENT
+
+  value Int // FIXED: 减免分；PERCENT: 折扣百分比(1-99)
+
+  minAmount Int @default(0) @map("min_amount") // 最低消费，分，0 不限
+
+  totalCount Int @default(0) @map("total_count") // 发放总数，0 不限
+
+  usedCount Int @default(0) @map("used_count")
+
+  perUserLimit Int @default(1) @map("per_user_limit") // 每人限用次数
+
+  startAt DateTime? @map("start_at")
+
+  endAt DateTime? @map("end_at")
+
+  status String @default("ACTIVE") // ACTIVE / DISABLED
+
+  remark String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("coupons")
+}
+
+// 合同模板：后台配置，正文含 {{占位符}}，公章与乙方信息
+
+model ContractTemplate {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  contentHtml String @db.Text // 合同正文（含占位符）
+
+  sealImageUrl String? @map("seal_image_url") // 公章图片
+
+  partyBName String @default("") @map("party_b_name")
+
+  partyBAddress String @default("") @map("party_b_address")
+
+  partyBPhone String @default("") @map("party_b_phone")
+
+  partyBCreditCode String @default("") @map("party_b_credit_code") // 统一社会信用代码
+
+  partyBType String @default("individual") @map("party_b_type") // individual=个体户 / company=公司
+
+  partyBLegalRep String @default("") @map("party_b_legal_rep") // 负责人姓名（个体户负责人签字）
+
+  isDefault Boolean @default(false) @map("is_default")
+
+  version Int @default(1) // 当前版本号（编辑保存 +1）
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  contracts Contract[]
+
+  versions ContractTemplateVersion[]
+
+  packages Package[]
+
+  @@map("contract_templates")
+}
+
+// 电子合同：下单后按默认模板生成，签署后留痕
+
+model Contract {
+  id Int @id @default(autoincrement())
+
+  orderId Int @unique @map("order_id")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  templateId Int? @map("template_id")
+
+  template ContractTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  contractNo String? @unique @map("contract_no")
+
+  partyAName String @map("party_a_name")
+
+  partyAPhone String @map("party_a_phone")
+
+  partyACompany String? @map("party_a_company")
+
+  partyAIdCard String? @map("party_a_id_card")
+
+  serviceContent String @map("service_content") @db.Text
+
+  servicesJson String? @map("services_json") @db.Text // 服务项清单快照（JSON 数组）
+
+  terms String? @db.Text // 补充条款（顾问追加约定，富文本）
+
+  clausesJson String? @map("clauses_json") @db.Text // 已选附加条款快照（JSON 数组）
+
+  version Int @default(1) @map("version") // 版本号（每次后台编辑 +1）
+
+  amount Int // 分
+
+  periodStart String? @map("period_start")
+
+  periodEnd String? @map("period_end")
+
+  serviceDays Int? @map("service_days") // 31 / 93 / 372（来自套餐 period_days 快照）
+
+  periodText String? @map("period_text") // 如「共 31 天」
+
+  status String @default("PENDING") @map("status") // PENDING / SIGNED / VOID
+
+  signatureImageUrl String? @map("signature_image_url")
+
+  signedAt DateTime? @map("signed_at")
+
+  signIp String? @map("sign_ip")
+
+  signUserAgent String? @map("sign_user_agent")
+
+  signOpenid String? @map("sign_openid")
+
+  signNickname String? @map("sign_nickname")
+
+  pdfUrl String? @map("pdf_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  versions ContractVersion[]
+
+  @@map("contracts")
+}
+
+// 合同版本日志：后台每次编辑记一条（谁改/何时/改前后字段 diff）
+
+model ContractVersion {
+  id Int @id @default(autoincrement())
+
+  contractId Int @map("contract_id")
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  version Int
+
+  adminId Int? @map("admin_id")
+
+  adminName String? @map("admin_name")
+
+  changesJson String? @map("changes_json") @db.Text // [{field, before, after}]
+
+  remark String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([contractId])
+  @@map("contract_versions")
+}
+
+// 订单修改历史：顾问改单留痕
+
+model OrderChangeLog {
+  id Int @id @default(autoincrement())
+
+  orderId Int @map("order_id")
+
+  adminId Int? @map("admin_id")
+
+  adminName String? @map("admin_name")
+
+  changes String @db.Text // JSON：变更明细
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([orderId])
+  @@map("order_change_logs")
+}
+
+// 会员合并日志：记录哪两个账号在何时被谁合并（不可篡改，仅供追溯）
+
+model MemberMergeLog {
+  id Int @id @default(autoincrement())
+
+  fromMemberId Int @map("from_member_id")
+
+  toMemberId Int @map("to_member_id")
+
+  fromPhone String? @map("from_phone")
+
+  toPhone String? @map("to_phone")
+
+  operator String @default("system") // system / admin
+
+  adminId Int? @map("admin_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([fromMemberId])
+  @@index([toMemberId])
+  @@map("member_merge_logs")
+}
+
+// ---------------- 后台日志（只增不改不删） ----------------
+
+// 管理员登录日志：成功/失败都记，用于审计与防爆破告警
+
+model AdminLoginLog {
+  id Int @id @default(autoincrement())
+
+  adminId Int? @map("admin_id")
+
+  username String
+
+  ip String?
+
+  ua String?
+
+  status String // success / fail
+
+  failReason String? @map("fail_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([username])
+  @@index([ip])
+  @@index([createdAt])
+  @@map("admin_login_logs")
+}
+
+// 管理员操作日志：记录关键写操作的前后快照
+
+model AdminOperationLog {
+  id Int @id @default(autoincrement())
+
+  adminId Int? @map("admin_id")
+
+  username String?
+
+  module String // 订单 / 会员 / 线索 / 设置 / 套餐 / 回收站 ...
+
+  action String // create / update / delete / restore / purge / login
+
+  targetType String? @map("target_type")
+
+  targetId Int? @map("target_id")
+
+  beforeJson String? @map("before_json") @db.Text
+
+  afterJson String? @map("after_json") @db.Text
+
+  ip String?
+
+  ua String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([module])
+  @@index([action])
+  @@index([createdAt])
+  @@map("admin_operation_logs")
+}
+
+// 实名认证记录：只增不改不删，作为核身留痕与后台对账依据
+
+model RealNameAuth {
+  id Int @id @default(autoincrement())
+
+  memberId Int @map("member_id")
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  openid String? @map("openid")
+
+  realName String @map("real_name")
+
+  idCardNoEnc String @map("id_card_no_enc") // AES-256-GCM 加密
+
+  status String @default("PENDING") @map("status") // PENDING / VERIFIED / FAILED
+
+  verifyChannel String @map("verify_channel") // wechat_face / manual_idcard
+
+  transactionId String? @map("transaction_id") // 微信 verifyId / 二要素流水号
+
+  failReason String? @map("fail_reason")
+
+  verifiedAt DateTime? @map("verified_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  deletedAt DateTime? @map("deleted_at")
+
+  deletedBy Int? @map("deleted_by")
+
+  deleteReason String? @map("delete_reason")
+
+  @@index([memberId])
+  @@index([openid])
+  @@index([status])
+  @@map("real_name_auths")
+}
+
+// ---------------- AI 大模型配置与调用日志 ----------------
+
+// 大模型提供商配置：后台「AI 配置」菜单维护，支持开关/APIKey/默认模型
+model AiProvider {
+  id          Int      @id @default(autoincrement())
+  provider    String   @unique // doubao / deepseek / qwen / ernie / glm / openai
+  name        String // 显示名
+  enabled     Boolean  @default(false)
+  apiKey      String?  @map("api_key")
+  apiBase     String?  @map("api_base") // OpenAI 兼容 base URL
+  model       String? // 模型名
+  temperature Float    @default(0.7)
+  maxTokens   Int      @default(2000) @map("max_tokens")
+  isDefault   Boolean  @default(false) @map("is_default")
+  sort        Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("ai_providers")
+}
+
+// AI 调用日志：谁、什么时候、用哪个模型、token 消耗、场景
+model AiCallLog {
+  id               Int      @id @default(autoincrement())
+  memberId         Int?     @map("member_id") // 客户调用（小程序 AI 助手）
+  adminId          Int?     @map("admin_id") // 运营/超管后台调用
+  member           Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  admin            Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  provider         String
+  model            String?
+  scene            String   @default("assistant") // report_summary / report_analysis / assistant
+  prompt           String?  @db.Text
+  completion       String?  @db.Text
+  promptTokens     Int      @default(0) @map("prompt_tokens")
+  completionTokens Int      @default(0) @map("completion_tokens")
+  totalTokens      Int      @default(0) @map("total_tokens")
+  durationMs       Int      @default(0) @map("duration_ms")
+  success          Boolean  @default(true)
+  error            String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([memberId])
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("ai_call_logs")
+}
+
+// AI 聊天记录（小程序端持久化，支持历史加载 + 上下文注入）
+model AiChatMessage {
+  id        Int      @id @default(autoincrement())
+  memberId  Int      @map("member_id")
+  role      String // user / assistant
+  content   String   @db.Text
+  projectId Int?     @map("project_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  member  Member   @relation(fields: [memberId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id])
+
+  @@index([memberId, createdAt])
+  @@index([memberId, role])
+  @@map("ai_chat_messages")
+}
+
+// ---------------- 服务周期 / 任务 / 通知（V2.0 新增） ----------------
+
+enum ServicePeriodStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  DELAYED
+  CANCELLED
+}
+
+// 服务周期：客户购买服务后，项目下的服务时间窗口（支持续费多周期）
+model ServicePeriod {
+  id           Int                 @id @default(autoincrement())
+  projectId    Int                 @map("project_id")
+  project      Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  orderId      Int?                @map("order_id")
+  packageName  String?             @map("package_name")
+  periodDays   Int                 @default(31) @map("period_days")
+  startAt      DateTime            @map("start_at")
+  endAt        DateTime            @map("end_at")
+  status       ServicePeriodStatus @default(PENDING)
+  prevPeriodId Int?                @map("prev_period_id")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  updatedAt    DateTime            @updatedAt @map("updated_at")
+
+  tasks Task[]
+
+  @@index([projectId, status])
+  @@index([orderId])
+  @@map("service_periods")
+}
+
+// 任务：服务周期内的具体交付项（负责人 + 截止日期）
+model Task {
+  id          Int           @id @default(autoincrement())
+  periodId    Int           @map("period_id")
+  period      ServicePeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  title       String
+  description String?       @db.Text
+  assigneeId  Int?          @map("assignee_id")
+  dueAt       DateTime?     @map("due_at")
+  status      TaskStatus    @default(TODO)
+  completedAt DateTime?     @map("completed_at")
+  sort        Int           @default(0)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@index([periodId, status])
+  @@map("tasks")
+}
+
+// 通知：客户站内信（日报/月报/支付/合同/项目/续费）
+model Notification {
+  id        Int      @id @default(autoincrement())
+  memberId  Int      @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  content   String?  @db.Text
+  link      String?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([memberId, isRead, createdAt])
+  @@map("notifications")
+}
+
+// ---------------- 合同模板版本 / 附加条款库（V2.0 新增） ----------------
+
+// 合同模板版本历史：每次保存记一版，支持回滚
+model ContractTemplateVersion {
+  id               Int              @id @default(autoincrement())
+  templateId       Int              @map("template_id")
+  template         ContractTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  version          Int
+  name             String
+  contentHtml      String           @db.Text
+  sealImageUrl     String?          @map("seal_image_url")
+  partyBName       String           @default("") @map("party_b_name")
+  partyBAddress    String           @default("") @map("party_b_address")
+  partyBPhone      String           @default("") @map("party_b_phone")
+  partyBCreditCode String           @default("") @map("party_b_credit_code")
+  partyBType       String           @default("individual") @map("party_b_type")
+  partyBLegalRep   String           @default("") @map("party_b_legal_rep")
+  createdById      Int?             @map("created_by_id")
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  @@unique([templateId, version])
+  @@index([templateId])
+  @@map("contract_template_versions")
+}
+
+// 附加条款库：后台维护，下单时勾选自动加到合同「其他约定」
+model ContractClause {
+  id        Int      @id @default(autoincrement())
+  name      String
+  content   String   @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  isBuiltin Boolean  @default(false) @map("is_builtin")
+  sort      Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sort])
+  @@map("contract_clauses")
+}
+
+model ServiceType {
+  id           Int      @id @default(autoincrement())
+  name         String // 代运营 / AI视频 / 平面设计 / 小程序开发
+  icon         String? // 图标标识
+  description  String?  @db.Text
+  enabled      Boolean  @default(true)
+  fieldsConfig String?  @map("fields_config") @db.Text // JSON 数组：日报字段配置
+  reportConfig String?  @map("report_config") @db.Text // JSON：月报汇总规则
+  aiContext    String?  @map("ai_context") @db.Text // AI 语境描述
+  sort         Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  packages Package[]
+  projects Project[]
+
+  @@map("service_types")
+}
+
+
+model AdClick {
+  id          Int      @id @default(autoincrement())
+  clickid     String   @unique
+  openid      String?
+  unionid     String?
+  oaid        String?
+  // 腾讯点击监测下发的回传 URL（Next.js 已自动 url-decode，可直接 POST）
+  callback    String?   @db.Text
+  ip          String?
+  userAgent   String?  @map("user_agent")
+  referer     String?
+  landingPage String?  @map("landing_page")
+  isConverted Boolean  @default(false) @map("is_converted")
+  isOrdered   Boolean  @default(false) @map("is_ordered")
+  convertedAt DateTime? @map("converted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // 腾讯广告转化回传状态：PENDING 待回传 / SUCCESS 成功 / FAILED 失败 / SKIPPED 未配置令牌跳过
+  reportStatus String?   @map("report_status")
+  reportedAt   DateTime? @map("reported_at")
+  reportError  String?   @map("report_error") @db.Text
+
+  @@index([openid])
+  @@index([createdAt])
+  @@map("ad_clicks")
+}
+

@@ -1,0 +1,41 @@
+<view class="container">
+  <!-- 已认证 -->
+  <view class="card done-card" wx:if="{{status && status.isRealVerified}}">
+    <view class="done-icon">✓</view>
+    <view class="done-title">已通过实名认证</view>
+    <view class="muted">{{status.realName}}</view>
+  </view>
+
+  <!-- 未认证 -->
+  <block wx:else>
+    <view class="card">
+      <view class="form-label">真实姓名</view>
+      <input class="form-input" placeholder="请输入真实姓名" value="{{name}}" bindinput="onName" />
+      <view class="form-label">身份证号</view>
+      <input class="form-input" placeholder="请输入身份证号" value="{{idCard}}" bindinput="onIdCard" />
+    </view>
+
+    <!-- 信息收集说明（合规要求：明示目的、方式、用途） -->
+    <view class="notice-card">
+      <view class="notice-title">信息收集说明</view>
+      <view class="notice-item">· 收集内容：真实姓名、身份证号</view>
+      <view class="notice-item">· 收集方式：您在本页面主动填写</view>
+      <view class="notice-item">· 使用目的：完成实名核验（含微信人脸核身）、确认合同签署主体身份、保障合同法律效力</view>
+      <view class="notice-item">· 保护措施：加密存储，仅用于上述用途，不向第三方出售</view>
+      <view class="notice-link" bindtap="goAgreement" data-type="privacy">查看《隐私政策》</view>
+    </view>
+
+    <!-- 授权同意勾选 -->
+    <view class="agree-row" bindtap="toggleAgree">
+      <view class="agree-box {{agree ? 'agree-on' : ''}}">
+        <view class="agree-check">✓</view>
+      </view>
+      <view class="agree-text">
+        我已阅读并同意<text class="agree-link" catchtap="goAgreement" data-type="service">《用户服务协议》</text>和<text class="agree-link" catchtap="goAgreement" data-type="privacy">《隐私政策》</text>，并同意为完成实名核验及合同签署处理上述信息
+      </view>
+    </view>
+
+    <view class="btn-primary {{submitting || !agree ? 'disabled' : ''}}" bindtap="submit">{{submitting ? '提交中...' : '开始认证'}}</view>
+    <view class="tip muted">实名信息仅用于合同签署与法律效力，加密存储</view>
+  </block>
+</view>

@@ -1,0 +1,16 @@
+<view class="container login-page">
+  <view class="logo">闪</view>
+  <view class="brand">闪途</view>
+  <view class="slogan muted">实体企业线上增长服务商</view>
+  <view class="btn-primary login-btn {{agree ? '' : 'login-disabled'}}" bindtap="doLogin">微信一键登录</view>
+
+  <!-- 协议同意勾选（合规：收集用户信息前须取得授权同意） -->
+  <view class="agree-row" bindtap="toggleAgree">
+    <view class="agree-box {{agree ? 'agree-on' : ''}}">
+      <view class="agree-check">✓</view>
+    </view>
+    <view class="agree-text">
+      我已阅读并同意<text class="agree-link" catchtap="goAgreement" data-type="service">《用户服务协议》</text>和<text class="agree-link" catchtap="goAgreement" data-type="privacy">《隐私政策》</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,14 @@
+.login-page { text-align: center; padding-top: 160rpx; }
+.logo { width: 140rpx; height: 140rpx; border-radius: 32rpx; background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 60rpx; margin: 0 auto; box-shadow: 0 8rpx 24rpx rgba(37, 99, 235, 0.3); }
+.brand { font-size: 48rpx; font-weight: 700; margin-top: 32rpx; }
+.slogan { margin-top: 16rpx; }
+.login-btn { margin-top: 80rpx; width: 70%; margin-left: auto; margin-right: auto; }
+.login-disabled { opacity: 0.55; }
+
+/* 协议同意勾选行 */
+.agree-row { display: flex; align-items: flex-start; justify-content: center; margin-top: 32rpx; padding: 0 60rpx; }
+.agree-box { width: 34rpx; height: 34rpx; border-radius: 50%; border: 2rpx solid #cbd5e1; margin-right: 12rpx; margin-top: 2rpx; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.agree-on { background: #2563eb; border-color: #2563eb; }
+.agree-check { font-size: 20rpx; color: #ffffff; line-height: 1; }
+.agree-text { font-size: 23rpx; color: #64748b; line-height: 1.65; text-align: left; }
+.agree-link { color: #2563eb; }

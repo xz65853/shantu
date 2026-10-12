@@ -1,0 +1,77 @@
+<view class="container" wx:if="{{p}}">
+  <!-- 项目信息 -->
+  <view class="card">
+    <view class="p-name">{{p.name}}</view>
+    <view class="p-meta">项目编号：{{p.projectNo || '—'}}</view>
+    <view class="p-meta">{{p.packageName || '服务项目'}}</view>
+    <view class="p-meta muted" wx:if="{{p.startAt}}">服务期：{{p.startAt}} ~ {{p.endAt}}</view>
+    <view class="p-meta muted" wx:if="{{p.manager}}">负责人：{{p.manager}}</view>
+  </view>
+
+  <!-- 标签切换 -->
+  <view class="tabs">
+    <view class="tab {{tab === 'daily' ? 'active' : ''}}" data-tab="daily" bindtap="switchTab">服务日报</view>
+    <view class="tab {{tab === 'report' ? 'active' : ''}}" data-tab="report" bindtap="switchTab">月度报告</view>
+  </view>
+
+  <!-- 日报 -->
+  <view wx:if="{{tab === 'daily'}}">
+    <view class="empty" wx:if="{{!dailyLogs.length}}">暂无日报</view>
+    <view class="card" wx:for="{{dailyLogs}}" wx:key="id">
+      <view class="log-head">
+        <text class="log-date">{{item.workDate}}</text>
+        <text class="muted">视频 {{item.videos}} · 直播 {{item.lives}}</text>
+      </view>
+      <view class="log-content">{{item.content}}</view>
+      <view class="log-meta muted" wx:if="{{item.summary}}">{{item.summary}}</view>
+      <view class="log-imgs" wx:if="{{item.images.length}}">
+        <image wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" class="log-img" src="{{img}}" mode="aspectFill" data-urls="{{item.images}}" data-current="{{img}}" bindtap="openPreview" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 月报 -->
+  <view wx:if="{{tab === 'report'}}">
+    <view class="empty" wx:if="{{!reports.length}}">暂无月报</view>
+    <view class="card" wx:for="{{reports}}" wx:key="id">
+      <view class="log-head"><text class="log-date">{{item.month}}</text></view>
+      <view class="report-grid">
+        <view class="rg"><text class="rg-num">{{item.videos}}</text><text class="rg-label">视频</text></view>
+        <view class="rg"><text class="rg-num">{{item.lives}}</text><text class="rg-label">直播</text></view>
+        <view class="rg"><text class="rg-num">{{item.views}}</text><text class="rg-label">播放</text></view>
+        <view class="rg"><text class="rg-num">{{item.leads}}</text><text class="rg-label">线索</text></view>
+        <view class="rg"><text class="rg-num">{{item.deals}}</text><text class="rg-label">成交</text></view>
+        <view class="rg"><text class="rg-num">{{item.newFans}}</text><text class="rg-label">新增粉丝</text></view>
+        <view class="rg rg-wide"><text class="rg-num">{{item.gmvText}}</text><text class="rg-label">GMV</text></view>
+      </view>
+      <view class="log-content" wx:if="{{item.summary}}">{{item.summary}}</view>
+      <view class="log-imgs" wx:if="{{item.images.length}}">
+        <image wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" class="log-img" src="{{img}}" mode="aspectFill" data-urls="{{item.images}}" data-current="{{img}}" bindtap="openPreview" />
+      </view>
+    </view>
+  </view>
+</view>
+<view class="loading" wx:if="{{loading}}">加载中...</view>
+
+<!-- 溯源水印：fixed 全屏 background 平铺，截图必带水印，pointer-events 不拦操作 -->
+<view
+  class="wm-fixed"
+  wx:if="{{wm.enabled && wm.backgroundImage}}"
+  style="background-image: url('{{wm.backgroundImage}}'); background-size: {{wm.bgSize}};"
+></view>
+
+<!-- 满屏预览：图片可缩放（水印由上方 fixed 层覆盖，放大也带水印） -->
+<view class="wm-preview-mask" wx:if="{{preview.visible}}" catchtouchmove="noop">
+  <view
+    class="wm-preview-stage"
+    style="transform: scale({{preview.scale}});"
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="onTouchEnd"
+    catchtap="onStageTap"
+  >
+    <image src="{{preview.current}}" mode="aspectFit" class="wm-preview-img" />
+  </view>
+  <view class="wm-preview-close" catchtap="closePreview">×</view>
+  <view class="wm-preview-tip">双击或双指放大 · 点击关闭</view>
+</view>

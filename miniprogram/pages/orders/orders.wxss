@@ -1,0 +1,52 @@
+.pkg-name { font-size: 32rpx; font-weight: 600; color: #0B1220; }
+.pkg-price { color: #DC2626; font-size: 44rpx; font-weight: 700; margin-top: 12rpx; }
+.pkg-period { font-size: 24rpx; font-weight: 400; color: #94A3B8; margin-left: 4rpx; }
+.pkg-feature-title { margin-top: 24rpx; font-size: 28rpx; font-weight: 600; color: #0B1220; }
+.pkg-features { margin-top: 12rpx; }
+.pkg-feature { display: block; font-size: 26rpx; color: #64748B; margin-top: 6rpx; }
+
+/* SKU 规格选择 */
+.sku-section { margin-top: 20rpx; }
+.sku-label { font-size: 26rpx; color: #64748B; margin-bottom: 12rpx; }
+.sku-list { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.sku {
+  flex: 1;
+  min-width: 180rpx;
+  box-sizing: border-box;
+  border: 2rpx solid #E6EAF2;
+  border-radius: 16rpx;
+  padding: 20rpx 16rpx;
+  text-align: center;
+  background: #fff;
+}
+.sku-on { border-color: #2563EB; background: #F0F5FF; }
+.sku-name { font-size: 26rpx; color: #0B1220; font-weight: 500; }
+.sku-on .sku-name { color: #2563EB; font-weight: 600; }
+.sku-price { margin-top: 8rpx; font-size: 30rpx; color: #DC2626; font-weight: 700; }
+.sku-on .sku-price { color: #2563EB; }
+.sku-save {
+  display: inline-block; margin-top: 8rpx; font-size: 20rpx; color: #DC2626;
+  background: #FEE2E2; border-radius: 999rpx; padding: 4rpx 12rpx;
+}
+.sku-original { margin-top: 8rpx; font-size: 22rpx; color: #94A3B8; text-decoration: line-through; }
+
+/* 手机号授权提示卡 */
+.phone-tip { text-align: center; padding: 32rpx 28rpx; }
+.phone-tip-title { font-size: 30rpx; font-weight: 600; color: #0B1220; }
+.phone-tip-sub { font-size: 24rpx; color: #94A3B8; margin-top: 10rpx; line-height: 1.5; }
+.btn-phone { margin-top: 24rpx; width: 100%; }
+.login-tip { text-align: center; padding: 120rpx 40rpx; }
+.login-tip text { display: block; color: #94A3B8; margin-bottom: 32rpx; }
+.order-list { display: flex; flex-direction: column; gap: 16rpx; }
+.order-item {
+  background: #fff; border: 1rpx solid #E6EAF2; border-radius: 20rpx; padding: 24rpx;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 14rpx 32rpx -22rpx rgba(11, 18, 32, 0.1);
+}
+.order-head { display: flex; justify-content: space-between; align-items: center; }
+.order-no { font-size: 24rpx; color: #94A3B8; }
+.order-body { display: flex; justify-content: space-between; align-items: center; margin-top: 12rpx; font-size: 30rpx; color: #0B1220; }
+.order-amount { font-weight: 600; color: #DC2626; }
+.order-footer { display: flex; justify-content: flex-end; margin-top: 16rpx; }
+.order-pay-btn { background: #2563EB; color: #fff; border-radius: 999rpx; padding: 12rpx 40rpx; font-size: 26rpx; }
+.order-pay-btn:active { background: #1D4ED8; }
+.empty, .loading { text-align: center; padding: 40rpx; color: #94A3B8; }

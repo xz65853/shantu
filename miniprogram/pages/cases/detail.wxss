@@ -1,0 +1,37 @@
+.cover-wrap { margin-bottom: 20rpx; }
+.cover { width: 100%; height: 360rpx; }
+.title { font-size: 36rpx; font-weight: 700; }
+.meta { margin-top: 16rpx; display: flex; gap: 12rpx; }
+.tag { background: #f2f3f5; padding: 6rpx 16rpx; border-radius: 8rpx; font-size: 22rpx; color: #64748B; }
+.h { font-size: 30rpx; font-weight: 600; margin-bottom: 12rpx; }
+.gallery { display: flex; flex-direction: column; gap: 16rpx; }
+.gallery-img { width: 100%; display: block; }
+.loading { text-align: center; padding: 40rpx; color: #94A3B8; }
+
+/* ===== 溯源水印：fixed 全屏 background 平铺，不拦操作 ===== */
+.wm-fixed {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 9999; pointer-events: none;
+  background-repeat: repeat; background-position: 0 0; background-size: auto;
+}
+
+/* ===== 满屏预览（水印层 z-index 高于遮罩，预览大图同样带水印） ===== */
+.wm-preview-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 9998; overflow: hidden; }
+.wm-preview-stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 50%; }
+.wm-preview-img { width: 100%; height: 100%; }
+.wm-preview-close { position: fixed; right: 32rpx; top: 40rpx; width: 64rpx; height: 64rpx; line-height: 64rpx; text-align: center; color: #fff; font-size: 48rpx; z-index: 10000; }
+.wm-preview-tip {
+  position: fixed; left: 50%; bottom: 40rpx; transform: translateX(-50%);
+  padding: 10rpx 20rpx; border-radius: 8rpx; background: rgba(0,0,0,0.45);
+  color: rgba(255,255,255,0.9); font-size: 22rpx; white-space: nowrap; z-index: 10000;
+}
+
+/* ===== 相关案例 ===== */
+.rel-list { display: flex; flex-direction: column; gap: 20rpx; }
+.rel-item { display: flex; gap: 20rpx; align-items: center; }
+.rel-cover { width: 200rpx; height: 140rpx; flex-shrink: 0; border-radius: 12rpx; overflow: hidden; }
+.rel-img { width: 100%; height: 100%; }
+.rel-photo { width: 200rpx; height: 140rpx; flex-shrink: 0; background: #f2f3f5; color: #94A3B8; font-size: 22rpx; display: flex; align-items: center; justify-content: center; border-radius: 12rpx; }
+.rel-body { flex: 1; min-width: 0; }
+.rel-title { font-size: 28rpx; font-weight: 600; color: #1a1d21; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rel-tag { margin-top: 8rpx; display: inline-block; background: #f2f3f5; padding: 4rpx 14rpx; border-radius: 8rpx; font-size: 20rpx; color: #64748B; }

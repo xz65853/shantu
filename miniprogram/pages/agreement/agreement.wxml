@@ -1,0 +1,90 @@
+<view class="container">
+  <!-- 顶部切换 -->
+  <view class="seg">
+    <view class="seg-item {{type === 'service' ? 'seg-active' : ''}}" bindtap="switchTab" data-type="service">用户服务协议</view>
+    <view class="seg-item {{type === 'privacy' ? 'seg-active' : ''}}" bindtap="switchTab" data-type="privacy">隐私政策</view>
+  </view>
+
+  <!-- ================= 用户服务协议 ================= -->
+  <view class="doc" wx:if="{{type === 'service'}}">
+    <view class="doc-updated">更新日期：2026年10月6日</view>
+
+    <view class="h2">一、协议的接受</view>
+    <view class="p">欢迎使用桃江闪途小程序服务（以下简称"本服务"）。本协议是您与桃江闪途（以下简称"我们"或"运营方"）之间就使用本小程序所订立的协议。您勾选同意本协议、或实际注册/登录/使用本小程序，均视为您已阅读并同意本协议全部内容。</view>
+
+    <view class="h2">二、服务内容</view>
+    <view class="p">本小程序为我们面向代运营服务客户的服务窗口，主要功能包括：服务套餐展示与购买、项目进度查看、日报与月度运营报告查看、合同在线签署与下载、实名认证等。</view>
+    <view class="p">具体服务内容、交付标准以您与我们另行签署的代运营服务合同为准；本协议与代运营服务合同不一致的，就服务交付事项以代运营服务合同约定为准。</view>
+
+    <view class="h2">三、账号与使用规范</view>
+    <view class="p">1. 您通过微信授权登录本小程序，登录身份以微信账号为准，您应妥善保管微信账号，因账号保管不善造成的损失由您自行承担。</view>
+    <view class="p">2. 您在使用本服务时应遵守《微信小程序平台运营规范》及相关法律法规，不得利用本服务从事违法违规活动。</view>
+    <view class="p">3. 您在实名认证、下单、签署合同等环节提供的信息应真实、准确、完整；因提供虚假信息导致的后果由您自行承担。</view>
+
+    <view class="h2">四、订单与付费</view>
+    <view class="p">1. 您在小程序内提交订单并完成支付后，我们将在约定时间内为您安排服务。订单价格以下单页面展示的价格为准。</view>
+    <view class="p">2. 如遇服务争议，您可通过小程序客服或合同约定的联系方式与我们沟通处理。</view>
+
+    <view class="h2">五、用户信息保护</view>
+    <view class="p">我们非常重视您的个人信息保护。关于我们如何收集、使用、存储和保护您的个人信息，详见本小程序内公示的《隐私政策》。您同意本协议即视为已阅读并同意《隐私政策》。</view>
+
+    <view class="h2">六、知识产权</view>
+    <view class="p">本小程序的页面设计、文案、图标、代码等内容的知识产权归运营方或相应权利人所有。您在项目服务期间获得的数据分析报告、运营素材等成果的归属，以代运营服务合同约定为准。</view>
+
+    <view class="h2">七、免责声明</view>
+    <view class="p">1. 因不可抗力、微信平台规则调整、网络故障等非运营方过错原因导致服务中断或数据延迟的，运营方不承担由此产生的直接损失，但会尽力协助恢复。</view>
+
+    <view class="h2">八、协议的变更与终止</view>
+    <view class="p">我们可能根据业务调整对本协议进行修订，修订后的协议将在本页面公示。若您继续使用本服务，视为接受修订后的协议。您停止使用本服务即可终止本协议。</view>
+
+    <view class="h2">九、法律适用与争议解决</view>
+    <view class="p">本协议适用中华人民共和国法律。因本协议产生的争议，双方应友好协商解决；协商不成的，任何一方可向运营方所在地有管辖权的人民法院提起诉讼。</view>
+
+    <view class="h2">十、联系我们</view>
+    <view class="p">如您对本协议有任何疑问，可通过小程序内客服功能或您的对接运营顾问与我们联系。</view>
+  </view>
+
+  <!-- ================= 隐私政策 ================= -->
+  <view class="doc" wx:else>
+    <view class="doc-updated">更新日期：2026年10月6日</view>
+    <view class="p">桃江闪途（以下简称"我们"）非常重视用户的隐私和个人信息保护。本政策向您说明我们如何收集、使用、存储和保护您的个人信息，以及您享有的相关权利。请您在使用本小程序前仔细阅读并充分理解本政策，<text class="strong">您勾选同意或继续使用本小程序，即表示您同意我们按照本政策处理您的个人信息。</text></view>
+
+    <view class="h2">一、我们收集的信息及用途</view>
+    <view class="table">
+      <view class="tr tr-head"><view class="td">信息类型</view><view class="td td-2">收集方式</view><view class="td td-3">使用目的与用途</view></view>
+      <view class="tr"><view class="td">微信登录凭证（OpenID）</view><view class="td td-2">微信授权登录时自动获取</view><view class="td td-3">用于识别您的账号唯一身份，建立并保护您的会员账户</view></view>
+      <view class="tr"><view class="td">手机号</view><view class="td td-2">您在下单/认证时主动填写</view><view class="td td-3">用于订单沟通联系、服务通知、身份核验</view></view>
+      <view class="tr"><view class="td">微信昵称、头像</view><view class="td td-2">您主动选择头像/昵称时获取</view><view class="td td-3">用于在本小程序内展示您的个人资料</view></view>
+      <view class="tr"><view class="td">真实姓名、身份证号</view><view class="td td-2">您在实名认证时主动填写</view><view class="td td-3">用于完成实名核验（含微信人脸核身）、确认合同签署主体身份、保障合同法律效力</view></view>
+    </view>
+
+    <view class="h2">二、收集与使用方式</view>
+    <view class="p">1. 我们仅通过您主动填写、主动上传或微信授权的方式收集上述信息，<text class="strong">不会以任何隐蔽方式收集您的信息</text>。</view>
+    <view class="p">2. 我们收集信息时会通过弹窗、页面提示等方式向您明示收集目的，并在您同意后才开始收集。</view>
+    <view class="p">3. 我们遵循"最小必要"原则，仅收集实现上述功能所必需的信息，不强制要求您提供与功能无关的信息。</view>
+
+    <view class="h2">三、信息的存储与保护</view>
+    <view class="p">1. 您的个人信息存储于中华人民共和国境内的服务器，我们采用访问控制、传输加密、敏感字段加密存储等技术手段保护您的信息安全。</view>
+    <view class="p">2. 我们将个人信息保存期限设定为：为实现本政策所述目的所必需的最短时间；超出保存期限后我们会对您的个人信息进行删除或匿名化处理。</view>
+
+    <view class="h2">四、信息的共享</view>
+    <view class="p">我们不会向任何第三方出售您的个人信息。仅在以下情形中，我们会向必要的合作方提供：</view>
+    <view class="p">1. 实名核验：将您的姓名、身份证号提交给微信人脸核身服务，用于完成实名认证；</view>
+    <view class="p">2. 支付服务：订单支付由微信支付完成，我们仅向微信支付传递实现支付所必需的订单信息；</view>
+    <view class="p">3. 根据法律法规或司法机关强制要求提供的情形。</view>
+
+    <view class="h2">五、您的权利</view>
+    <view class="p">1. 查询与更正：您可在"我的"页面查看、修改您的个人资料；</view>
+    <view class="p">2. 删除与撤回：您可联系您的运营顾问或小程序客服申请删除您的个人信息或注销账户，我们将在核实后 15 个工作日内处理；</view>
+    <view class="p">3. 注销账户后，我们将停止为您提供服务，并依法删除或匿名化处理您的个人信息。</view>
+
+    <view class="h2">六、未成年人保护</view>
+    <view class="p">本服务面向成年人。若您未满 18 周岁，请在监护人陪同下阅读本政策，并在征得监护人同意后使用本服务。</view>
+
+    <view class="h2">七、政策的更新</view>
+    <view class="p">我们可能适时修订本政策，修订后的政策将在本页面发布并更新"更新日期"。重大变更时，我们会以弹窗等显著方式向您提示。</view>
+
+    <view class="h2">八、联系我们</view>
+    <view class="p">如您对本政策或个人信息保护有任何疑问、意见或投诉，可通过小程序内客服功能或您的对接运营顾问与我们联系，我们将在 15 个工作日内答复。</view>
+  </view>
+</view>

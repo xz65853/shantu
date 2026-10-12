@@ -1,0 +1,10 @@
+.case-list { display: flex; flex-direction: column; gap: 16rpx; }
+.case-item {
+  display: flex; background: #fff; border: 1rpx solid #E6EAF2; border-radius: 20rpx; overflow: hidden;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 14rpx 32rpx -22rpx rgba(11, 18, 32, 0.1);
+}
+.case-cover { width: 220rpx; height: 160rpx; flex-shrink: 0; }
+.case-info { padding: 20rpx; display: flex; flex-direction: column; }
+.case-title { font-size: 30rpx; font-weight: 600; color: #0B1220; }
+.case-summary { font-size: 24rpx; color: #64748B; margin-top: 8rpx; }
+.loading, .empty { text-align: center; padding: 40rpx; color: #94A3B8; }

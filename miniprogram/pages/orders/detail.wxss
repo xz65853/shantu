@@ -1,0 +1,63 @@
+page { background: #f7f8fa; }
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* 顶部状态头：蓝渐变（待支付），绿渐变（已支付），灰（已取消） */
+.status-header {
+  background: linear-gradient(135deg, #2563EB, #4F8CFF);
+  padding: 56rpx 40rpx 72rpx;
+  color: #fff;
+}
+.status-header.header-paid { background: linear-gradient(135deg, #0EA5E9, #10B981); }
+.status-header.header-gray { background: linear-gradient(135deg, #94A3B8, #B6BECB); }
+.status-title { font-size: 48rpx; font-weight: 700; }
+.status-sub { font-size: 26rpx; opacity: 0.92; margin-top: 12rpx; line-height: 1.5; }
+
+.body { flex: 1; padding: 0 24rpx; margin-top: -40rpx; }
+
+.card {
+  background: #fff; border-radius: 24rpx; padding: 32rpx; margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 14rpx 32rpx -22rpx rgba(11, 18, 32, 0.1);
+}
+.card-title { font-size: 26rpx; color: #94A3B8; margin-bottom: 20rpx; }
+
+/* 商品信息 */
+.goods-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.goods-left { flex: 1; padding-right: 24rpx; }
+.goods-name { font-size: 34rpx; font-weight: 600; color: #0B1220; }
+.goods-period { font-size: 26rpx; color: #64748B; margin-top: 10rpx; }
+.goods-summary { font-size: 24rpx; color: #94A3B8; margin-top: 8rpx; line-height: 1.6; }
+.goods-price { font-size: 40rpx; font-weight: 700; color: #F97316; }
+
+/* 订单信息 */
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 14rpx 0; border-bottom: 1rpx solid #F1F3F7; }
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 26rpx; color: #94A3B8; flex-shrink: 0; }
+.info-value { font-size: 26rpx; color: #0B1220; text-align: right; }
+.info-value.mono { font-family: monospace; }
+
+/* 状态提示条 */
+.tip-bar { border-radius: 16rpx; padding: 22rpx 24rpx; font-size: 26rpx; line-height: 1.5; margin-bottom: 20rpx; }
+.tip-warn { background: #FFF7ED; color: #C2410C; border: 1rpx solid #FED7AA; }
+.tip-ok { background: #F0FDF4; color: #15803D; border: 1rpx solid #BBF7D0; }
+
+/* 底部按钮 */
+.footer {
+  display: flex; gap: 20rpx; padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #fff; border-top: 1rpx solid #F1F3F7;
+}
+.btn-ghost {
+  flex: 1; text-align: center; padding: 26rpx 0; border-radius: 16rpx;
+  border: 1rpx solid #CBD5E1; color: #0B1220; font-size: 30rpx; font-weight: 500;
+}
+.btn-primary {
+  flex: 1; text-align: center; padding: 26rpx 0; border-radius: 16rpx;
+  background: #F97316; color: #fff; font-size: 30rpx; font-weight: 600;
+}
+.btn-primary:active { background: #EA580C; }
+
+/* 通用按钮（登录/重试） */
+.btn { display: inline-block; margin-top: 24rpx; padding: 20rpx 64rpx; background: #2563EB; color: #fff; border-radius: 999rpx; font-size: 28rpx; }
+.login-tip { text-align: center; padding: 160rpx 40rpx; }
+.login-tip text { display: block; color: #94A3B8; margin-bottom: 24rpx; }
+.loading, .err-box { text-align: center; padding: 120rpx 40rpx; }
+.err-text { color: #94A3B8; }

@@ -1,0 +1,34 @@
+<view class="container">
+  <!-- 服务列表 -->
+  <view class="section-title">核心服务</view>
+  <view class="svc-list">
+    <view class="svc-item" wx:for="{{services}}" wx:key="id" data-slug="{{item.slug}}" bindtap="goDetail">
+      <view class="svc-info">
+        <text class="svc-name">{{item.name}}</text>
+        <text class="svc-summary">{{item.summary}}</text>
+      </view>
+      <text class="svc-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 套餐 -->
+  <view class="section-title">服务套餐</view>
+  <view class="pkg-list">
+    <view class="pkg-item {{item.recommended ? 'pkg-hot' : ''}}" wx:for="{{packages}}" wx:key="id">
+      <image class="pkg-cover" wx:if="{{item.coverUrl}}" src="{{item.coverUrl}}" mode="aspectFill" lazy-load="{{true}}" />
+      <view class="pkg-hot-tag" wx:if="{{item.recommended}}">推荐</view>
+      <view class="pkg-head">
+        <text class="pkg-name">{{item.name}}</text>
+        <text class="pkg-price">¥{{item.yuan}}<text class="pkg-from"> 起</text></text>
+      </view>
+      <text class="pkg-summary" wx:if="{{item.summary}}">{{item.summary}}</text>
+      <view class="pkg-sku-tip" wx:if="{{item.skuCount > 1}}">{{item.skuCount}} 种规格可选</view>
+      <view class="pkg-features" wx:if="{{item.features.length}}">
+        <text class="pkg-feature" wx:for="{{item.features}}" wx:for-item="f" wx:key="*this">· {{f}}</text>
+      </view>
+      <view class="pkg-btn" data-id="{{item.id}}" bindtap="goOrder">选择规格并购买</view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

@@ -1,0 +1,50 @@
+.title { font-size: 32rpx; font-weight: 600; }
+.meta { font-size: 26rpx; margin-top: 6rpx; color: #333; }
+.muted { color: #94A3B8; }
+.sec-title { font-size: 28rpx; font-weight: 600; margin-bottom: 12rpx; }
+
+.status-row { display: flex; align-items: center; gap: 16rpx; margin-top: 12rpx; }
+.badge { font-size: 22rpx; padding: 4rpx 16rpx; border-radius: 999rpx; }
+.badge-ok { background: #e8f7ee; color: #0f9d58; }
+.badge-pending { background: #FFF4E5; color: #B45309; }
+.badge-off { background: #f2f3f5; color: #94A3B8; }
+.sign-time { font-size: 24rpx; }
+
+/* 正文预览：固定高度内滚动，页面不再被合同拉得很长 */
+.body-scroll { height: 640rpx; border: 2rpx solid #eef0f3; border-radius: 12rpx; background: #fafbfc; padding: 16rpx; box-sizing: border-box; }
+.para { font-size: 26rpx; line-height: 1.7; color: #333; margin-bottom: 12rpx; white-space: pre-wrap; }
+
+.sign-label { font-size: 28rpx; margin-bottom: 12rpx; }
+.sign-canvas { width: 100%; height: 240rpx; background: #fafbfc; border: 2rpx dashed #d5d8dd; border-radius: 12rpx; }
+.sign-actions { display: flex; justify-content: flex-end; margin-top: 8rpx; }
+.clear-btn { color: #94A3B8; font-size: 26rpx; padding: 4rpx 24rpx; }
+.done-tip { font-size: 26rpx; line-height: 1.6; margin-bottom: 16rpx; }
+
+/* 未付款提示 */
+.unpaid-tip { margin-top: 16rpx; padding: 14rpx 16rpx; border-radius: 10rpx; background: #fff7e6; color: #b26a00; font-size: 24rpx; line-height: 1.5; }
+
+/* 甲方签名展示 */
+.sign-preview { display: flex; align-items: center; gap: 16rpx; margin-top: 16rpx; }
+.preview-label { font-size: 26rpx; }
+.sign-img { width: 240rpx; height: 96rpx; border: 2rpx solid #eef0f3; border-radius: 8rpx; background: #fff; }
+
+/* 通用按钮 */
+.btn-outline { margin-top: 16rpx; text-align: center; padding: 18rpx 0; border-radius: 999rpx; border: 2rpx solid #e0e3e8; color: #333; font-size: 28rpx; }
+.btn-primary { margin-top: 20rpx; text-align: center; padding: 20rpx 0; border-radius: 28rpx; background: #2563EB; color: #fff; font-size: 30rpx; }
+.btn-primary:active { background: #1D4ED8; }
+.disabled { opacity: 0.5; }
+
+/* PDF 预览 / 下载 */
+.pdf-actions { display: flex; gap: 16rpx; margin-top: 16rpx; }
+.pdf-actions .btn-outline, .pdf-actions .btn-solid { flex: 1; margin-top: 0; }
+.btn-solid {
+  text-align: center; padding: 18rpx 0; border-radius: 999rpx;
+  background: #2563EB; color: #fff; font-size: 28rpx; font-weight: 600;
+}
+.pdf-tip { margin-top: 12rpx; font-size: 22rpx; line-height: 1.5; }
+
+/* 底部固定操作栏（安全区适配），签署按钮不再沉底 */
+.footer-space { height: 180rpx; }
+.footer-bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -4rpx 16rpx rgba(0,0,0,0.04); }
+.footer-bar .btn-primary { margin-top: 0; }
+.tip { text-align: center; margin-top: 8rpx; font-size: 22rpx; }

@@ -1,0 +1,118 @@
+/* app.wxss 全局样式 —— 设计 token 对齐管理后台工作台 */
+page {
+  --brand: #2563EB;        /* 工作台主蓝 */
+  --brand-dark: #1D4ED8;   /* 按钮 hover/强调 */
+  --brand-soft: #EFF4FF;   /* 浅蓝底（徽章/选中态） */
+  --ink: #0B1220;          /* 墨色主文字 */
+  --sub: #64748B;          /* 次级文字 */
+  --faint: #94A3B8;        /* 弱文字/占位 */
+  --line: #E6EAF2;         /* 统一边框 */
+  --bg: #F6F8FB;           /* 页面底色 */
+  --danger: #DC2626;       /* 警示红 */
+  --ok: #0F9D58;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 28rpx;
+  line-height: 1.6;
+}
+
+.container { padding: 24rpx; }
+
+/* 卡片：白底 + 1px 边框 + 大圆角 + 柔和阴影（同后台 .card / shadow-soft） */
+.card {
+  background: #fff;
+  border: 1rpx solid var(--line);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 16rpx 40rpx -24rpx rgba(11, 18, 32, 0.12);
+}
+
+/* 主按钮：圆角 28rpx / 高 88rpx，同后台 .btn-primary */
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  border-radius: 28rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  padding: 22rpx 0;
+  text-align: center;
+}
+.btn-primary:active { background: var(--brand-dark); }
+.btn-primary.disabled { background: #C6D4F5; color: rgba(255, 255, 255, 0.9); }
+
+/* 次级按钮：白底描边 */
+.btn-ghost {
+  background: #fff;
+  border: 1rpx solid var(--line);
+  color: var(--ink);
+  border-radius: 28rpx;
+  font-size: 28rpx;
+  padding: 20rpx 0;
+  text-align: center;
+}
+
+/* 状态徽章：rounded-full + 浅色底深色字（同后台表格状态列） */
+.badge {
+  display: inline-block;
+  font-size: 22rpx;
+  line-height: 1;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.badge-blue   { background: var(--brand-soft); color: var(--brand); }
+.badge-red    { background: #FEECEC; color: var(--danger); }
+.badge-green  { background: #E8F7EE; color: var(--ok); }
+.badge-amber  { background: #FFF4E5; color: #B45309; }
+.badge-gray   { background: #F1F3F7; color: var(--sub); }
+
+.tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.muted { color: var(--sub); font-size: 24rpx; }
+
+.price { color: var(--danger); font-weight: 600; }
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: -0.5rpx;
+  margin: 24rpx 0 16rpx;
+}
+
+/* 图标方块：彩色渐变底 + 白色线性图标（图标源文件为白色，必须配深色底） */
+.qi-icon {
+  width: 88rpx; height: 88rpx; border-radius: 24rpx; margin-bottom: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6rpx 16rpx rgba(15, 23, 42, 0.12);
+}
+.qi-icon image { width: 48rpx; height: 48rpx; }
+.qi-icon.small { width: 64rpx; height: 64rpx; border-radius: 18rpx; margin-bottom: 0; box-shadow: none; }
+.qi-icon.small image { width: 36rpx; height: 36rpx; }
+
+.qi-blue   { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+.qi-purple { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+.qi-cyan   { background: linear-gradient(135deg, #38BDF8, #0EA5E9); }
+.qi-green  { background: linear-gradient(135deg, #34D399, #0F9D58); }
+.qi-orange { background: linear-gradient(135deg, #FBBF24, #F97316); }
+.qi-gray   { background: linear-gradient(135deg, #94A3B8, #64748B); }
+
+/* 输入框：同后台 .field */
+.field-input {
+  width: 100%;
+  min-height: 88rpx;
+  background: #fff;
+  border: 1rpx solid var(--line);
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}

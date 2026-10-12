@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="card pay-card">
+    <view class="pay-amount" wx:if="{{order}}">¥{{order.amountText}}</view>
+    <view class="pay-label" wx:if="{{order}}">{{order.packageName || '订单支付'}}</view>
+    <view class="pay-label muted" wx:if="{{order}}">订单号：{{orderNo}}</view>
+
+    <!-- 订单加载失败：明确提示 + 重试，支付按钮保持禁用 -->
+    <block wx:if="{{loadFailed && !order}}">
+      <view class="pay-err">订单信息加载失败，请检查网络后重试</view>
+      <view class="pay-retry" bindtap="retryLoad">重新加载</view>
+    </block>
+    <view class="pay-label muted" wx:if="{{!order && !loadFailed}}">订单加载中…</view>
+  </view>
+  <view class="btn-primary {{paying || !order ? 'disabled' : ''}}" bindtap="pay">{{paying ? '支付中...' : '微信支付'}}</view>
+</view>

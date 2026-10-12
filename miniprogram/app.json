@@ -1,0 +1,66 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/lead/lead",
+    "pages/services/services",
+    "pages/services/detail",
+    "pages/cases/cases",
+    "pages/cases/detail",
+    "pages/projects/projects",
+    "pages/projects/detail",
+    "pages/orders/orders",
+    "pages/orders/detail",
+    "pages/orders/pay",
+    "pages/contract/contracts",
+    "pages/contract/sign",
+    "pages/realname/realname",
+    "pages/agreement/agreement",
+    "pages/mine/mine",
+    "pages/login/login"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "闪途",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8fa"
+  },
+  "tabBar": {
+    "color": "#9AA1AC",
+    "selectedColor": "#2563EB",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/tab/home.png",
+        "selectedIconPath": "assets/tab/home_on.png"
+      },
+      {
+        "pagePath": "pages/services/services",
+        "text": "服务",
+        "iconPath": "assets/tab/service.png",
+        "selectedIconPath": "assets/tab/service_on.png"
+      },
+      {
+        "pagePath": "pages/cases/cases",
+        "text": "案例",
+        "iconPath": "assets/tab/case.png",
+        "selectedIconPath": "assets/tab/case_on.png"
+      },
+      {
+        "pagePath": "pages/projects/projects",
+        "text": "项目",
+        "iconPath": "assets/tab/project.png",
+        "selectedIconPath": "assets/tab/project_on.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tab/mine.png",
+        "selectedIconPath": "assets/tab/mine_on.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

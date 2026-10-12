@@ -1,0 +1,81 @@
+<view class="page">
+  <!-- 登录提示 -->
+  <view class="login-tip" wx:if="{{needLogin}}">
+    <text>登录后查看订单详情</text>
+    <view class="btn" bindtap="goLogin">去登录</view>
+  </view>
+
+  <block wx:if="{{loading && !order}}">
+    <view class="loading">加载中...</view>
+  </block>
+
+  <block wx:elif="{{loadFailed && !order}}">
+    <view class="err-box">
+      <view class="err-text">订单信息加载失败</view>
+      <view class="btn" bindtap="retry">重新加载</view>
+    </view>
+  </block>
+
+  <block wx:elif="{{order}}">
+    <!-- 顶部状态头：蓝绿渐变 -->
+    <view class="status-header {{order.status === 'PAID' || order.status === 'COMPLETED' ? 'header-paid' : order.status === 'CANCELLED' || order.status === 'REFUNDED' ? 'header-gray' : ''}}">
+      <view class="status-title">{{statusInfo.text}}</view>
+      <view class="status-sub">{{statusInfo.sub}}</view>
+    </view>
+
+    <view class="body">
+      <!-- 商品信息卡片 -->
+      <view class="card">
+        <view class="card-title">商品信息</view>
+        <view class="goods-row">
+          <view class="goods-left">
+            <view class="goods-name">{{order.packageName}}</view>
+            <view class="goods-period" wx:if="{{order.period}}">服务周期：{{order.period}}</view>
+            <view class="goods-summary" wx:if="{{order.summary}}">{{order.summary}}</view>
+          </view>
+          <view class="goods-price">¥{{order.amountText}}</view>
+        </view>
+      </view>
+
+      <!-- 订单信息卡片 -->
+      <view class="card">
+        <view class="card-title">订单信息</view>
+        <view class="info-row">
+          <text class="info-label">订单号</text>
+          <text class="info-value mono">{{order.orderNo}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">创建时间</text>
+          <text class="info-value">{{order.createdAtText}}</text>
+        </view>
+        <view class="info-row" wx:if="{{order.paidAtText}}">
+          <text class="info-label">支付时间</text>
+          <text class="info-value">{{order.paidAtText}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">联系人</text>
+          <text class="info-value">{{order.name}} {{order.phoneMask}}</text>
+        </view>
+      </view>
+
+      <!-- 合同状态提示条 -->
+      <view class="tip-bar tip-warn" wx:if="{{order.status === 'PENDING' && contractChecked && !signed}}">
+        该订单的电子合同尚未签署，签署后才能发起支付
+      </view>
+      <view class="tip-bar tip-ok" wx:elif="{{order.status === 'PAID' && signed}}">
+        合同已签署，服务进行中
+      </view>
+    </view>
+
+    <!-- 底部按钮区（按状态显示） -->
+    <view class="footer" wx:if="{{order.status !== 'CANCELLED' && order.status !== 'REFUNDED' && order.status !== 'REFUNDING'}}">
+      <block wx:if="{{order.status === 'PENDING'}}">
+        <view class="btn-ghost" wx:if="{{contractChecked && !signed}}" bindtap="goSign">签署合同</view>
+        <view class="btn-primary" bindtap="goPay">立即支付 ¥{{order.amountText}}</view>
+      </block>
+      <block wx:elif="{{order.status === 'PAID' || order.status === 'COMPLETED'}}">
+        <view class="btn-ghost" bindtap="goViewContract">查看合同</view>
+      </block>
+    </view>
+  </block>
+</view>

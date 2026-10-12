@@ -1,0 +1,21 @@
+.done-card { text-align: center; padding: 80rpx 40rpx; }
+.done-icon { width: 120rpx; height: 120rpx; border-radius: 50%; background: #e8f8ef; color: #27ae60; display: flex; align-items: center; justify-content: center; font-size: 56rpx; margin: 0 auto; }
+.done-title { font-size: 34rpx; font-weight: 600; margin-top: 24rpx; }
+.form-label { font-size: 28rpx; color: #64748B; margin: 16rpx 0 8rpx; }
+.form-input { background: #f7f8fa; border-radius: 12rpx; padding: 20rpx; font-size: 28rpx; }
+.tip { text-align: center; margin-top: 20rpx; }
+
+/* 信息收集说明卡片 */
+.notice-card { background: #f0f6ff; border: 1rpx solid #d6e4ff; border-radius: 16rpx; padding: 24rpx; margin-top: 24rpx; }
+.notice-title { font-size: 28rpx; font-weight: 600; color: #1d4ed8; margin-bottom: 12rpx; }
+.notice-item { font-size: 24rpx; color: #475569; line-height: 1.7; }
+.notice-link { font-size: 24rpx; color: #2563eb; margin-top: 12rpx; font-weight: 500; }
+
+/* 协议同意勾选行 */
+.agree-row { display: flex; align-items: flex-start; margin-top: 28rpx; padding: 0 8rpx; }
+.agree-box { width: 36rpx; height: 36rpx; border-radius: 50%; border: 2rpx solid #cbd5e1; margin-right: 14rpx; margin-top: 2rpx; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.agree-on { background: #2563eb; border-color: #2563eb; }
+.agree-check { font-size: 22rpx; color: #ffffff; line-height: 1; }
+.agree-text { font-size: 24rpx; color: #64748b; line-height: 1.65; }
+.agree-link { color: #2563eb; }
+.btn-primary.disabled { opacity: 0.5; }

@@ -1,0 +1,35 @@
+.svc-list { display: flex; flex-direction: column; gap: 16rpx; }
+.svc-item {
+  background: #fff; border: 1rpx solid #E6EAF2; border-radius: 20rpx; padding: 24rpx; display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 14rpx 32rpx -22rpx rgba(11, 18, 32, 0.1);
+}
+.svc-name { font-size: 30rpx; font-weight: 600; display: block; color: #0B1220; }
+.svc-summary { font-size: 24rpx; color: #64748B; display: block; margin-top: 8rpx; }
+.svc-arrow { color: #CBD5E1; font-size: 36rpx; }
+
+.pkg-list { display: flex; flex-direction: column; gap: 16rpx; }
+.pkg-item {
+  background: #fff; border: 1rpx solid #E6EAF2; border-radius: 20rpx; padding: 28rpx; position: relative;
+  box-shadow: 0 2rpx 4rpx rgba(11, 18, 32, 0.04), 0 14rpx 32rpx -22rpx rgba(11, 18, 32, 0.1);
+}
+.pkg-hot { border: 2rpx solid #2563EB; }
+.pkg-cover { width: 100%; height: 220rpx; border-radius: 14rpx; display: block; margin-bottom: 20rpx; background: #F1F5F9; }
+.pkg-hot-tag {
+  position: absolute; top: 0; right: 0; background: #2563EB; color: #fff;
+  font-size: 22rpx; padding: 6rpx 18rpx; border-radius: 0 18rpx 0 18rpx;
+}
+.pkg-head { display: flex; justify-content: space-between; align-items: center; }
+.pkg-name { font-size: 32rpx; font-weight: 600; color: #0B1220; }
+.pkg-price { color: #DC2626; font-size: 36rpx; font-weight: 700; }
+.pkg-from { font-size: 22rpx; font-weight: 400; color: #94A3B8; }
+.pkg-summary { display: block; margin-top: 12rpx; font-size: 25rpx; color: #475569; line-height: 1.6; }
+.pkg-sku-tip {
+  display: inline-block; margin-top: 14rpx; padding: 6rpx 16rpx; border-radius: 20rpx;
+  background: #F0F5FF; color: #2563EB; font-size: 23rpx;
+}
+.pkg-features { margin-top: 16rpx; }
+.pkg-feature { display: block; font-size: 26rpx; color: #64748B; margin-top: 6rpx; }
+.pkg-btn { margin-top: 20rpx; text-align: center; background: #2563EB; color: #fff; border-radius: 28rpx; padding: 18rpx 0; font-size: 28rpx; }
+.pkg-btn:active { background: #1D4ED8; }
+
+.loading { text-align: center; padding: 40rpx; color: #94A3B8; }

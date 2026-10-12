@@ -1,0 +1,111 @@
+<view class="page">
+  <!-- 首屏（背景图用 image 铺底：小程序 WXSS 不能直接引用本地图片） -->
+  <view class="hero">
+    <image class="hero-bg" src="/assets/bg/hero_home.jpg" mode="aspectFill" />
+    <view class="hero-mask"></view>
+    <view class="hero-body">
+      <view class="hero-eyebrow">{{site.name || '实体企业线上增长服务商'}}</view>
+      <view class="hero-title">{{home.title || '把生意搬到线上'}}</view>
+      <view class="hero-sub">{{home.subtitle || site.slogan}}</view>
+      <view class="hero-badges" wx:if="{{home.badges.length}}">
+        <text class="badge" wx:for="{{home.badges}}" wx:key="*this">{{item}}</text>
+      </view>
+      <view class="hero-btn" hover-class="hero-btn-press" bindtap="consult">{{home.buttonText || '免费获取运营方案'}}</view>
+    </view>
+  </view>
+
+  <!-- 数据概览（同后台工作台「待办中心」统计卡，三个入口可点跳转） -->
+  <view class="stat-bar">
+    <view class="stat-card" hover-class="stat-press" bindtap="goServicesTab">
+      <view class="stat-num">{{services.length}}</view>
+      <view class="stat-label">核心服务</view>
+    </view>
+    <view class="stat-card" hover-class="stat-press" bindtap="goCasesTab">
+      <view class="stat-num">{{cases.length}}</view>
+      <view class="stat-label">成功案例</view>
+    </view>
+    <view class="stat-card" hover-class="stat-press" bindtap="goPackages">
+      <view class="stat-num">{{packages.length}}</view>
+      <view class="stat-label">服务套餐</view>
+    </view>
+    <view class="stat-card stat-card-cta" bindtap="consult">
+      <view class="stat-num">1对1</view>
+      <view class="stat-label">专属顾问</view>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-grid">
+    <view class="quick-item" bindtap="consult" hover-class="quick-press">
+      <view class="qi-icon qi-blue"><image src="/assets/icons/ic_consult.png" /></view>
+      <text class="quick-name">免费预约</text>
+    </view>
+    <view class="quick-item" bindtap="goOrders" hover-class="quick-press">
+      <view class="qi-icon qi-orange"><image src="/assets/icons/ic_order.png" /></view>
+      <text class="quick-name">我的订单</text>
+    </view>
+    <view class="quick-item" bindtap="goContracts" hover-class="quick-press">
+      <view class="qi-icon qi-cyan"><image src="/assets/icons/ic_contract.png" /></view>
+      <text class="quick-name">我的合同</text>
+    </view>
+  </view>
+
+  <!-- 核心服务（恢复两列文字卡片：每行固定 2 个，点卡片进服务详情） -->
+  <view class="section" wx:if="{{services.length}}">
+    <view class="section-head">
+      <text class="section-title">核心服务</text>
+    </view>
+    <view class="service-rows">
+      <view class="service-row" wx:for="{{serviceRows}}" wx:key="key">
+        <view class="service-item" wx:for="{{item.items}}" wx:for-item="svc" wx:key="id" hover-class="service-press" data-slug="{{svc.slug}}" bindtap="goService">
+          <text class="service-name">{{svc.name}}</text>
+          <text class="service-summary">{{svc.summary}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 案例 -->
+  <view class="section" wx:if="{{home.showCases && cases.length}}">
+    <view class="section-head">
+      <text class="section-title">精选案例</text>
+    </view>
+    <view class="case-list">
+      <view class="case-item" wx:for="{{cases}}" wx:key="id" data-slug="{{item.slug}}" bindtap="goCase">
+        <image wx:if="{{item.cover}}" class="case-cover" src="{{item.cover}}" mode="aspectFill" />
+        <view class="case-info">
+          <text class="case-title">{{item.title}}</text>
+          <text class="case-summary">{{item.summary}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 套餐 -->
+  <view class="section" wx:if="{{home.showPackages && packages.length}}">
+    <view class="section-head">
+      <text class="section-title">服务套餐</text>
+      <text class="section-more" bindtap="goPackages">查看全部</text>
+    </view>
+    <view class="pkg-list">
+      <view class="pkg-item" wx:for="{{packages}}" wx:key="id" hover-class="pkg-press" data-id="{{item.id}}" bindtap="goOrder">
+        <view class="pkg-info">
+          <text class="pkg-name">{{item.name}}</text>
+          <text class="pkg-price">¥{{item.priceText}}<text class="pkg-period" wx:if="{{item.period}}">/{{item.period}}</text></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 免费预约（留资入口） -->
+  <view class="lead-banner">
+    <view class="lead-banner-body">
+      <view class="lb-title">{{home.notice || '免费领取专属运营方案'}}</view>
+      <view class="lb-sub">1 个工作日内出方案 · 见效付费 · 不满意随时停</view>
+    </view>
+    <view class="lb-btn" hover-class="lb-btn-press" bindtap="consult">免费预约</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

@@ -1,0 +1,78 @@
+<view class="container">
+  <!-- 合同信息头 -->
+  <view class="card" wx:if="{{contract}}">
+    <view class="title">{{contract.title || '服务合同'}}</view>
+    <view class="meta muted">合同编号：{{contract.contractNo || contract.orderNo}}</view>
+    <view class="meta">{{contract.packageName}} · {{contract.amountText}}</view>
+    <view class="meta muted" wx:if="{{contract.periodRangeText}}">{{contract.periodRangeText}}</view>
+    <view class="status-row">
+      <text class="badge {{contract.status === 'SIGNED' ? 'badge-ok' : contract.status === 'VOID' ? 'badge-off' : 'badge-pending'}}">{{contract.statusText}}</text>
+      <text class="muted sign-time" wx:if="{{contract.signedAtText}}">签署于 {{contract.signedAtText}}</text>
+    </view>
+  </view>
+
+  <!-- 查看模式：正文限高滚动（预览框不再撑满全页） -->
+  <view class="card" wx:if="{{contract && mode === 'view'}}">
+    <view class="sec-title">合同正文</view>
+    <scroll-view scroll-y class="body-scroll">
+      <view class="para" wx:for="{{contract.paragraphs}}" wx:key="index">{{item}}</view>
+    </scroll-view>
+    <view class="sign-preview" wx:if="{{contract.signatureLocal}}">
+      <text class="muted preview-label">甲方签名：</text>
+      <image src="{{contract.signatureLocal}}" mode="aspect-fit" class="sign-img" />
+    </view>
+    <view class="unpaid-tip" wx:if="{{contract.orderStatus && contract.orderStatus !== 'PAID'}}">
+      合同待付款，双方签章将在支付完成后自动补齐
+    </view>
+    <view class="pdf-actions">
+      <view class="btn-outline {{pdfBusy ? 'disabled' : ''}}" data-mode="view" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '预览 PDF'}}
+      </view>
+      <view class="btn-solid {{pdfBusy ? 'disabled' : ''}}" data-mode="save" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '下载合同'}}
+      </view>
+    </view>
+    <view class="pdf-tip muted">下载后点右上角「···」即可保存到手机或转发给微信好友</view>
+    <view class="btn-primary" wx:if="{{contract.status === 'PENDING'}}" bindtap="goSignMode">去签署</view>
+  </view>
+
+  <!-- 签署模式：手写签名 -->
+  <view class="card" wx:if="{{contract && mode === 'sign' && contract.status === 'PENDING'}}">
+    <view class="sign-label">请在下方空白处手写签名</view>
+    <canvas type="2d" id="signCanvas" class="sign-canvas" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd" bindtouchcancel="onTouchEnd"></canvas>
+    <view class="sign-actions">
+      <view class="clear-btn" bindtap="clear">清除重写</view>
+    </view>
+    <view class="pdf-actions">
+      <view class="btn-outline {{pdfBusy ? 'disabled' : ''}}" data-mode="view" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '先看一遍（PDF）'}}
+      </view>
+      <view class="btn-solid {{pdfBusy ? 'disabled' : ''}}" data-mode="save" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '下载合同'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 已签署/查看模式提示 -->
+  <view class="card" wx:if="{{contract && mode === 'sign' && contract.status !== 'PENDING'}}">
+    <view class="muted done-tip">
+      {{contract.status === 'SIGNED' ? '本合同已签署完成，可在「下载合同」中获取签章版 PDF。' : '本合同已作废。'}}
+    </view>
+    <view class="pdf-actions">
+      <view class="btn-outline {{pdfBusy ? 'disabled' : ''}}" data-mode="view" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '预览 PDF'}}
+      </view>
+      <view class="btn-solid {{pdfBusy ? 'disabled' : ''}}" data-mode="save" bindtap="openPdf">
+        {{pdfBusy ? '下载中…' : '下载合同'}}
+      </view>
+    </view>
+    <view class="pdf-tip muted">下载后点右上角「···」即可保存到手机或转发给微信好友</view>
+  </view>
+
+  <!-- 底部固定签署按钮（不再沉在长页面最底部） -->
+  <view class="footer-space"></view>
+  <view class="footer-bar" wx:if="{{contract && mode === 'sign' && contract.status === 'PENDING'}}">
+    <view class="btn-primary {{signing ? 'disabled' : ''}}" bindtap="submit">{{signing ? '签署中...' : '确认签署'}}</view>
+    <view class="tip muted">签署即表示您同意合同条款</view>
+  </view>
+</view>

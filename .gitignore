@@ -1,0 +1,54 @@
+# 依赖
+node_modules/
+
+# 构建产物
+.next/
+dist/
+dist_bak_*/
+dist.bak-*/
+dist_broken_*/
+dist.pre-ai/
+dist_old_*/
+tsconfig.tsbuildinfo
+
+# 环境变量（禁止提交）
+.env
+.env.local
+.env.production
+.env*.local
+.env.bak*
+
+# 备份
+backup/
+*.sql
+*.dump
+*.bak
+*.bak-*
+
+# 密钥与证书（禁止提交）
+*.pem
+*.key
+*.p12
+
+# 日志与临时文件
+*.log
+logs/
+_src-backup*/
+.src-backup*/
+_build.done
+_build.log
+_deploy_last.log
+_migrate_report_ai.sql
+scripts_migrate_member_no.js
+_assess.sh
+_check.sh
+_restore.sh
+_status.sh
+_swap.sh
+
+# 运行时上传
+uploads/
+
+# 系统
+.DS_Store
+*.bak*

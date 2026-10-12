@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: 255 255 255;
+    --fg: 11 18 32;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-white text-ink antialiased;
+    font-feature-settings: 'tnum' on, 'lnum' on;
+  }
+
+  ::selection {
+    @apply bg-brand-500/15;
+  }
+}
+
+@layer components {
+
+  /* ===== 后台统一样式 ===== */
+  .admin-page {
+    @apply min-h-screen;
+    background: #F5F7FA;
+  }
+
+  .admin-stats-card {
+    @apply rounded-2xl border border-line bg-white p-5 transition-all;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .admin-stats-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  .admin-table-wrap {
+    @apply overflow-x-auto rounded-2xl border border-line bg-white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .admin-table th {
+    @apply border-b border-line bg-mist px-4 py-3 text-left text-xs font-medium text-slate-500;
+  }
+
+  .admin-table td {
+    @apply border-b border-line px-4 py-3 text-sm;
+  }
+
+  .admin-table tbody tr {
+    @apply transition-colors;
+  }
+
+  .admin-table tbody tr:hover {
+    background: #F8FAFC;
+  }
+
+  .admin-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .admin-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .admin-badge-green { @apply bg-green-50 text-green-700; }
+  .admin-badge-amber { @apply bg-amber-50 text-amber-700; }
+  .admin-badge-slate { @apply bg-slate-100 text-slate-600; }
+  .admin-badge-blue { @apply bg-blue-50 text-blue-700; }
+  .admin-badge-red { @apply bg-red-50 text-red-700; }
+
+  .admin-filter-btn {
+    @apply rounded-lg px-3 py-1.5 text-sm transition;
+  }
+
+  .admin-filter-btn.active {
+    @apply bg-brand-600 text-white;
+  }
+
+  .admin-filter-btn:not(.active) {
+    @apply bg-white text-slate-600 hover:bg-brand-50 hover:text-brand-700;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-[1240px] px-5 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-medium tracking-[0.18em] text-brand-600 uppercase;
+  }
+
+  .section-title {
+    @apply text-[26px] font-semibold leading-tight tracking-tight text-ink sm:text-3xl lg:text-[34px];
+  }
+
+  .section-sub {
+    @apply mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-500;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-white transition-all duration-300;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700;
+  }
+
+  .btn-outline {
+    @apply btn border border-line bg-white px-5 py-2.5 text-ink hover:border-brand-300 hover:text-brand-700;
+  }
+
+  .btn-dark {
+    @apply btn bg-ink px-5 py-2.5 text-white hover:bg-ink/90;
+  }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-[13px] font-medium text-slate-700;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-md bg-mist px-2 py-1 text-xs text-slate-600;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(11, 18, 32, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(11, 18, 32, 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* 滚动出现动画 */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===== 小程序 WebView 移动端适配 =====
+ * 手机端管理后台通过 web-view 嵌入 PC 后台，这里针对触控做增强：
+ * - 按钮/输入框触控区域加大（≥ 44px ≈ 88rpx）
+ * - 安全区底部留白
+ * - 表格在窄屏横向滚动（已有 overflow-x-auto）
+ */
+@media (max-width: 768px) {
+  /* 触控按钮加高 */
+  .btn-primary,
+  button.btn-primary,
+  a.btn-primary {
+    min-height: 44px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  }
+
+  /* 表单输入框加大触控区域 */
+  .field,
+  input.field,
+  select.field,
+  textarea.field {
+    min-height: 44px;
+    font-size: 16px; /* 防止 iOS 聚焦自动缩放 */
+  }
+
+  /* 操作列小图标按钮加高（手指可点） */
+  table button,
+  table a {
+    min-height: 40px;
+  }
+
+  /* 主内容区底部安全区留白 */
+  main {
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* 顶部 header 高度适配 */
+  header {
+    min-height: 56px;
+  }
+}
+

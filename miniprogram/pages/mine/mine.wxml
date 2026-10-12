@@ -1,0 +1,106 @@
+<view class="page">
+  <!-- 头部（背景图 + 遮罩，本地图只能通过 <image> 铺底） -->
+  <view class="hero">
+    <image class="hero-bg" src="/assets/bg/mine_header.jpg" mode="aspectFill" />
+    <view class="hero-mask"></view>
+    <view class="hero-body">
+      <!-- 未登录 -->
+      <view class="guest" wx:if="{{!member}}">
+        <view class="avatar-ring">
+          <view class="avatar-placeholder">闪</view>
+        </view>
+        <view class="guest-tip">登录后查看项目、订单与合同</view>
+        <view class="login-btn" hover-class="login-btn-press" bindtap="doLogin">微信一键登录</view>
+      </view>
+
+      <!-- 已登录 -->
+      <view class="user" wx:else>
+        <button class="avatar-ring avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image wx:if="{{member.avatar}}" class="avatar" src="{{member.avatar}}" />
+          <view wx:else class="avatar-placeholder">{{initial}}</view>
+          <view wx:if="{{!member.avatar}}" class="avatar-edit-tip">点击设置</view>
+        </button>
+        <view class="user-info">
+          <view class="user-name">{{member.nickname || '微信用户'}}</view>
+          <view class="user-tags">
+            <text class="utag {{realname.isRealVerified ? 'utag-ok' : ''}}">{{realname.isRealVerified ? '已实名' : '未实名'}}</text>
+            <text class="utag">{{member.hasPhone ? '已绑手机' : '未绑手机'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="stats" wx:if="{{member}}">
+    <view class="stat" bindtap="goProjects">
+      <view class="stat-num">{{stats.projects}}</view>
+      <view class="stat-label">我的项目</view>
+    </view>
+    <view class="stat" bindtap="goOrders">
+      <view class="stat-num">{{stats.orders}}</view>
+      <view class="stat-label">我的订单</view>
+    </view>
+    <view class="stat" bindtap="goContracts">
+      <view class="stat-num">{{stats.contracts}}</view>
+      <view class="stat-label">我的合同</view>
+    </view>
+  </view>
+
+  <!-- 常用功能 -->
+  <view class="card">
+    <view class="card-title">常用功能</view>
+    <view class="quick">
+      <view class="qi" bindtap="goProjects">
+        <view class="qi-icon qi-blue"><image src="/assets/icons/ic_project.png" /></view>
+        <text>我的项目</text>
+      </view>
+      <view class="qi" bindtap="goOrders">
+        <view class="qi-icon qi-purple"><image src="/assets/icons/ic_order.png" /></view>
+        <text>我的订单</text>
+      </view>
+      <view class="qi" bindtap="goContracts">
+        <view class="qi-icon qi-cyan"><image src="/assets/icons/ic_contract.png" /></view>
+        <text>我的合同</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 实名认证 -->
+  <view class="card rn" bindtap="goRealname">
+    <view class="qi-icon small qi-green"><image src="/assets/icons/ic_realname.png" /></view>
+    <view class="rn-body">
+      <view class="rn-title">实名认证</view>
+      <view class="rn-sub">认证后可签署合同、查看溯源水印</view>
+    </view>
+    <text class="rn-status {{realname.isRealVerified ? 'ok' : ''}}">{{realname.isRealVerified ? '已认证' : '未认证'}}</text>
+    <text class="arrow">›</text>
+  </view>
+
+  <!-- 其他 -->
+  <view class="card menu">
+    <view class="mi" bindtap="goLead">
+      <view class="qi-icon small qi-orange"><image src="/assets/icons/ic_consult.png" /></view>
+      <text class="mi-label">预约咨询 / 联系顾问</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="mi" bindtap="goServices">
+      <view class="qi-icon small qi-gray"><image src="/assets/icons/ic_package.png" /></view>
+      <text class="mi-label">服务与套餐</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="mi" bindtap="goAgreement" data-type="service">
+      <view class="qi-icon small qi-gray"><image src="/assets/icons/ic_contract.png" /></view>
+      <text class="mi-label">用户服务协议</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="mi" bindtap="goAgreement" data-type="privacy">
+      <view class="qi-icon small qi-gray"><image src="/assets/icons/ic_realname.png" /></view>
+      <text class="mi-label">隐私政策</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view class="logout" wx:if="{{member}}" bindtap="logout">退出登录</view>
+  <view class="safe-space"></view>
+</view>

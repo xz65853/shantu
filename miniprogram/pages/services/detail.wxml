@@ -1,0 +1,28 @@
+<view class="container" wx:if="{{service}}">
+  <image wx:if="{{service.cover}}" class="cover" src="{{service.cover}}" mode="aspectFill" />
+  <view class="card">
+    <view class="name">{{service.name}}</view>
+    <view class="summary">{{service.summary}}</view>
+  </view>
+
+  <view class="card" wx:if="{{service.detail}}">
+    <view class="card-title">服务详情</view>
+    <rich-text class="content" nodes="{{service.detail}}" />
+  </view>
+
+  <view class="card" wx:if="{{service.process}}">
+    <view class="card-title">服务流程</view>
+    <rich-text class="content" nodes="{{service.process}}" />
+  </view>
+
+  <view class="card" wx:if="{{service.target}}">
+    <view class="card-title">适合对象</view>
+    <rich-text class="content" nodes="{{service.target}}" />
+  </view>
+
+  <view class="card" wx:if="{{service.faq}}">
+    <view class="card-title">常见问题</view>
+    <rich-text class="content" nodes="{{service.faq}}" />
+  </view>
+</view>
+<view class="loading" wx:if="{{loading}}">加载中...</view>

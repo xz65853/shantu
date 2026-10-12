@@ -1,0 +1,75 @@
+<view class="container" wx:if="{{c}}">
+  <view class="cover-wrap" wx:if="{{c.cover}}" data-urls="{{c.gallery}}" data-current="{{c.cover}}" bindtap="openPreview">
+    <image class="cover" src="{{c.cover}}" mode="aspectFill" />
+  </view>
+  <view class="card">
+    <view class="title">{{c.title}}</view>
+    <view class="meta" wx:if="{{c.industry || c.projectType}}">
+      <text class="tag" wx:if="{{c.industry}}">{{c.industry}}</text>
+      <text class="tag" wx:if="{{c.projectType}}">{{c.projectType}}</text>
+    </view>
+  </view>
+  <view class="card" wx:if="{{c.background}}">
+    <view class="h">项目背景</view>
+    <rich-text nodes="{{c.background}}" />
+  </view>
+  <view class="card" wx:if="{{c.strategy}}">
+    <view class="h">运营策略</view>
+    <rich-text nodes="{{c.strategy}}" />
+  </view>
+  <view class="card" wx:if="{{c.execution}}">
+    <view class="h">执行过程</view>
+    <rich-text nodes="{{c.execution}}" />
+  </view>
+  <view class="card" wx:if="{{c.result}}">
+    <view class="h">项目成果</view>
+    <rich-text nodes="{{c.result}}" />
+  </view>
+  <view class="card" wx:if="{{c.gallery && c.gallery.length}}">
+    <view class="h">项目图片</view>
+    <view class="gallery">
+      <image wx:for="{{c.gallery}}" wx:key="*this" src="{{item}}" mode="widthFix" class="gallery-img" data-urls="{{c.gallery}}" data-current="{{item}}" bindtap="openPreview" />
+    </view>
+  </view>
+
+  <!-- 相关案例 -->
+  <view class="card" wx:if="{{c.related && c.related.length}}">
+    <view class="h">相关案例</view>
+    <view class="rel-list">
+      <view class="rel-item" wx:for="{{c.related}}" wx:for-item="r" wx:key="id" data-slug="{{r.slug}}" bindtap="goCase">
+        <view class="rel-cover" wx:if="{{r.cover}}">
+          <image class="rel-img" src="{{r.cover}}" mode="aspectFill" />
+        </view>
+        <view class="rel-photo" wx:else>暂无图片</view>
+        <view class="rel-body">
+          <view class="rel-title">{{r.title}}</view>
+          <view class="rel-tag" wx:if="{{r.industry}}">{{r.industry}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class="loading" wx:if="{{loading}}">加载中...</view>
+
+<!-- 溯源水印：fixed 全屏 background 平铺，截图必带水印，pointer-events 不拦操作 -->
+<view
+  class="wm-fixed"
+  wx:if="{{wm.enabled && wm.backgroundImage}}"
+  style="background-image: url('{{wm.backgroundImage}}'); background-size: {{wm.bgSize}};"
+></view>
+
+<!-- 满屏预览：图片可缩放（水印由上方 fixed 层覆盖，放大也带水印） -->
+<view class="wm-preview-mask" wx:if="{{preview.visible}}" catchtouchmove="noop">
+  <view
+    class="wm-preview-stage"
+    style="transform: scale({{preview.scale}});"
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="onTouchEnd"
+    catchtap="onStageTap"
+  >
+    <image src="{{preview.current}}" mode="aspectFit" class="wm-preview-img" />
+  </view>
+  <view class="wm-preview-close" catchtap="closePreview">×</view>
+  <view class="wm-preview-tip">双击或双指放大 · 点击关闭</view>
+</view>

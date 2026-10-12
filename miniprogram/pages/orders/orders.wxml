@@ -1,0 +1,69 @@
+<view class="container">
+  <!-- 下单表单（原模板：不填姓名电话，会员资料自动带出） -->
+  <block wx:if="{{orderPackage}}">
+    <view class="card">
+      <view class="pkg-name">{{orderPackage.name}}</view>
+
+      <!-- SKU 规格选择 -->
+      <view class="sku-section" wx:if="{{skus.length}}">
+        <view class="sku-label">选择规格</view>
+        <view class="sku-list">
+          <view class="sku {{selectedSkuId === item.id ? 'sku-on' : ''}}" wx:for="{{skus}}" wx:key="id" data-id="{{item.id}}" bindtap="selectSku">
+            <view class="sku-name">{{item.name}}</view>
+            <view class="sku-price">¥{{item.yuan}}</view>
+            <view class="sku-save" wx:if="{{item.saveYuan}}">省¥{{item.saveYuan}}</view>
+            <view class="sku-original" wx:elif="{{item.originalYuan}}">¥{{item.originalYuan}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="pkg-feature-title" wx:if="{{showFeatures.length}}">
+        服务内容<text wx:if="{{selectedSku}}">（{{selectedSku.name}}）</text>
+      </view>
+      <view class="pkg-features" wx:if="{{showFeatures.length}}">
+        <text class="pkg-feature" wx:for="{{showFeatures}}" wx:key="*this">· {{item}}</text>
+      </view>
+    </view>
+
+    <!-- 未绑定手机号：需先微信授权获取手机号（下单接口强制校验手机号） -->
+    <view class="card phone-tip" wx:if="{{needPhone}}">
+      <view class="phone-tip-title">下单需要手机号</view>
+      <view class="phone-tip-sub">用于订单联系与合同签署，微信一键授权，无需手填</view>
+      <button class="btn-primary btn-phone" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">
+        微信授权手机号
+      </button>
+    </view>
+
+    <!-- 已绑定手机号：直接确认下单 -->
+    <view class="btn-primary {{submitting ? 'disabled' : ''}}" bindtap="submit" wx:else>
+      <block wx:if="{{submitting}}">提交中...</block>
+      <block wx:else>确认下单 ¥{{selectedSku ? selectedSku.yuan : orderPackage.yuan}}</block>
+    </view>
+  </block>
+
+  <!-- 订单列表 -->
+  <block wx:else>
+    <view class="login-tip" wx:if="{{needLogin}}">
+      <text>登录后查看订单</text>
+      <view class="btn-primary" bindtap="goLogin">去登录</view>
+    </view>
+    <view class="order-list" wx:else>
+      <view class="order-item" wx:for="{{list}}" wx:key="orderNo" data-orderno="{{item.orderNo}}" bindtap="goDetail">
+        <view class="order-head">
+          <text class="order-no">{{item.orderNo}}</text>
+          <text class="badge {{item.status === 'PENDING' ? 'badge-amber' : item.status === 'PAID' ? 'badge-green' : 'badge-gray'}}">{{item.statusText}}</text>
+        </view>
+        <view class="order-body">
+          <text>{{item.packageName}}{{item.skuName ? ' · ' + item.skuName : ''}}</text>
+          <text class="order-amount">¥{{item.amountText}}</text>
+        </view>
+        <view class="order-footer" wx:if="{{item.status === 'PENDING'}}">
+          <view class="order-pay-btn" data-orderno="{{item.orderNo}}" catchtap="goPay">去支付</view>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{!loading && !needLogin && !list.length}}">暂无订单</view>
+  </block>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

@@ -1,0 +1,13 @@
+<view class="container">
+  <view class="case-list">
+    <view class="case-item" wx:for="{{list}}" wx:key="id" data-slug="{{item.slug}}" bindtap="goDetail">
+      <image wx:if="{{item.cover}}" class="case-cover" src="{{item.cover}}" mode="aspectFill" />
+      <view class="case-info">
+        <text class="case-title">{{item.title}}</text>
+        <text class="case-summary">{{item.summary}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="empty" wx:if="{{!loading && !list.length}}">暂无案例</view>
+</view>

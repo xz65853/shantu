@@ -1,0 +1,86 @@
+<view class="page">
+  <!-- 顶部（背景图 + 遮罩，本地图需通过 <image> 铺底） -->
+  <view class="hero">
+    <image class="hero-bg" src="/assets/bg/hero_lead.jpg" mode="aspectFill" />
+    <view class="hero-mask"></view>
+    <view class="hero-body">
+      <view class="hero-eyebrow">免费预约 · 本月名额有限</view>
+      <view class="hero-title">领取专属运营方案</view>
+      <view class="hero-sub">{{notice || '留下联系方式，1 个工作日内联系你，先出方案再谈合作'}}</view>
+    </view>
+  </view>
+
+  <!-- 表单 -->
+  <view class="card" wx:if="{{!done}}">
+    <view class="field">
+      <view class="label">联系人<text class="req">*</text></view>
+      <input class="input" placeholder="请输入您的称呼" value="{{name}}" bindinput="onName" maxlength="20" placeholder-class="ph" />
+    </view>
+
+    <view class="field">
+      <view class="label">手机号<text class="req">*</text></view>
+      <input class="input" type="number" placeholder="请输入 11 位手机号" value="{{phone}}" bindinput="onPhoneInput" maxlength="11" placeholder-class="ph" />
+      <button class="wx-phone" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">使用微信绑定手机号</button>
+    </view>
+
+    <view class="field">
+      <view class="label">门店 / 公司名称</view>
+      <input class="input" placeholder="选填" value="{{company}}" bindinput="onCompany" maxlength="40" placeholder-class="ph" />
+    </view>
+
+    <view class="field" wx:if="{{services.length}}">
+      <view class="label">想做的业务<text class="opt">可多选</text></view>
+      <view class="tags">
+        <view
+          class="tag {{item.selected ? 'tag-on' : ''}}"
+          wx:for="{{services}}"
+          wx:key="id"
+          data-index="{{index}}"
+          bindtap="toggleService"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <view class="label">补充说明</view>
+      <textarea
+        class="textarea"
+        placeholder="选填：门店现状、预算、最想解决的问题"
+        value="{{remark}}"
+        bindinput="onRemark"
+        maxlength="200"
+        auto-height
+        placeholder-class="ph"
+      />
+    </view>
+
+    <view class="privacy">提交即表示同意我们仅将该联系方式用于方案沟通。</view>
+  </view>
+
+  <!-- 吸底提交栏：表单再长也能随时提交，不用滚到底 -->
+  <view class="footer-bar" wx:if="{{!done}}">
+    <view class="footer-inner">
+      <view class="footer-sum" wx:if="{{pickedCount}}">已选 {{pickedCount}} 项业务</view>
+      <view class="submit {{submitting ? 'disabled' : ''}}" bindtap="submit">
+        {{submitting ? '提交中…' : '提交预约'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 成功态 -->
+  <view class="card done-card" wx:else>
+    <view class="done-icon">✓</view>
+    <view class="done-title">预约成功</view>
+    <view class="done-desc">我们已收到你的信息，会在 1 个工作日内联系你，并先出一份针对性的运营方案。</view>
+
+    <block wx:if="{{site.wechatQrcode}}">
+      <view class="qr-label">想更快？长按识别二维码直接沟通</view>
+      <image class="qr" src="{{site.wechatQrcode}}" mode="widthFix" bindtap="previewQr" show-menu-by-longpress />
+    </block>
+
+    <view class="done-actions">
+      <view class="btn-ghost" bindtap="goHome">返回首页</view>
+      <view class="btn-solid" bindtap="reset">再填一份</view>
+    </view>
+  </view>
+</view>

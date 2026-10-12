@@ -1,0 +1,37 @@
+.p-name { font-size: 34rpx; font-weight: 700; }
+.p-meta { margin-top: 8rpx; font-size: 26rpx; color: #64748B; }
+.tabs { display: flex; background: #fff; border-radius: 16rpx; margin-bottom: 20rpx; overflow: hidden; }
+.tab { flex: 1; text-align: center; padding: 24rpx 0; font-size: 28rpx; color: #64748B; }
+.tab.active { color: #2563EB; font-weight: 600; border-bottom: 4rpx solid #2563EB; }
+.log-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.log-date { font-size: 28rpx; font-weight: 600; }
+.log-content { font-size: 26rpx; color: #3a3f47; line-height: 1.7; }
+.log-meta { margin-top: 8rpx; }
+.log-imgs { display: flex; flex-wrap: wrap; gap: 12rpx; margin-top: 12rpx; }
+.log-img { width: 160rpx; height: 160rpx; border-radius: 8rpx; }
+.report-grid { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 16rpx; }
+.rg { width: calc((100% - 32rpx) / 3); text-align: center; background: #f7f8fa; border-radius: 12rpx; padding: 16rpx 0; box-sizing: border-box; }
+.rg-wide { width: 100%; }
+.rg-num { display: block; font-size: 32rpx; font-weight: 700; color: #DC2626; }
+.rg-wide .rg-num { font-size: 36rpx; }
+.rg-label { display: block; font-size: 22rpx; color: #94A3B8; }
+.empty { text-align: center; padding: 60rpx; color: #94A3B8; }
+.loading { text-align: center; padding: 40rpx; color: #94A3B8; }
+
+/* ===== 溯源水印：fixed 全屏 background 平铺，不拦操作 ===== */
+.wm-fixed {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 9999; pointer-events: none;
+  background-repeat: repeat; background-position: 0 0; background-size: auto;
+}
+
+/* ===== 满屏预览（水印层 z-index 高于遮罩，预览大图同样带水印） ===== */
+.wm-preview-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 9998; overflow: hidden; }
+.wm-preview-stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transform-origin: 50% 50%; }
+.wm-preview-img { width: 100%; height: 100%; }
+.wm-preview-close { position: fixed; right: 32rpx; top: 40rpx; width: 64rpx; height: 64rpx; line-height: 64rpx; text-align: center; color: #fff; font-size: 48rpx; z-index: 10000; }
+.wm-preview-tip {
+  position: fixed; left: 50%; bottom: 40rpx; transform: translateX(-50%);
+  padding: 10rpx 20rpx; border-radius: 8rpx; background: rgba(0,0,0,0.45);
+  color: rgba(255,255,255,0.9); font-size: 22rpx; white-space: nowrap; z-index: 10000;
+}

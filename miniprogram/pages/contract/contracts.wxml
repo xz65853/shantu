@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="login-tip" wx:if="{{needLogin}}">
+    <text>登录后查看合同</text>
+    <view class="btn-primary" bindtap="goLogin">去登录</view>
+  </view>
+  <view class="c-list" wx:else>
+    <view class="c-item" wx:for="{{list}}" wx:key="id">
+      <view class="c-head">
+        <text class="c-title">{{item.title}}</text>
+        <text class="badge {{item.status === 'PENDING' ? 'badge-amber' : item.status === 'SIGNED' ? 'badge-green' : 'badge-gray'}}">{{item.statusText}}</text>
+      </view>
+      <view class="c-meta muted">合同号：{{item.contractNo || item.orderNo}}</view>
+      <view class="c-meta">{{item.packageName}} · {{item.amountText}}</view>
+      <view class="c-meta muted" wx:if="{{item.periodRangeText}}">{{item.periodRangeText}}</view>
+      <view class="c-meta muted" wx:if="{{item.signedAtText}}">签署时间：{{item.signedAtText}}</view>
+      <view class="c-footer">
+        <view class="c-view-btn" data-id="{{item.id}}" data-orderno="{{item.orderNo}}" bindtap="goView">查看合同</view>
+        <view class="c-dl-btn {{busyId === item.id ? 'disabled' : ''}}" data-id="{{item.id}}" bindtap="downloadPdf">
+          {{busyId === item.id ? '下载中…' : '下载 PDF'}}
+        </view>
+        <view class="c-sign-btn" wx:if="{{item.status === 'PENDING' && item.orderNo}}" data-orderno="{{item.orderNo}}" data-id="{{item.id}}" bindtap="goSign">去签署</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{!loading && !needLogin && !list.length}}">暂无合同</view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>
